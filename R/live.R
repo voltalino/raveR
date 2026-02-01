@@ -54,20 +54,39 @@ PlaybackController <- R6::R6Class(
     #' @field has_parse_error Whether the current script has a parse error
     has_parse_error = FALSE,
 
+    #' @field genre Music genre for playback
+    genre = "deep_house",
+
+    #' @field max_buffer_seconds Maximum buffer size to prevent memory leaks
+    max_buffer_seconds = 300,
+
+    #' @field buffer_history Ring buffer of recent audio buffers (for memory management)
+    buffer_history = list(),
+
     #' Initialize PlaybackController
     #'
     #' @param script_path Path to the R script to play
-    #' @param bpm Optional BPM (118-124). If NULL, auto-selects based on script hash.
+    #' @param bpm Optional BPM (60-180). If NULL, auto-selects based on script hash.
+    #' @param genre Optional genre (deep_house, techno, ambient, drum_bass)
+    #' @param max_buffer_seconds Maximum total buffer seconds to keep in memory
     #'
     #' @return A new PlaybackController instance
-    initialize = function(script_path, bpm = NULL) {
+    initialize = function(script_path, bpm = NULL, genre = "deep_house", max_buffer_seconds = 300) {
       # Validate script exists
       if (!file.exists(script_path)) {
         stop("Script not found: ", script_path, call. = FALSE)
       }
 
-      # Store script path
+      # Validate genre
+      valid_genres <- c("deep_house", "techno", "ambient", "drum_bass")
+      if (!genre %in% valid_genres) {
+        stop("Invalid genre: ", genre, call. = FALSE)
+      }
+
+      # Store configuration
       self$script_path <- normalizePath(script_path)
+      self$genre <- genre
+      self$max_buffer_seconds <- max_buffer_seconds
 
       # Analyze script to create code model
       self$code_model <- raver_analyze(self$script_path)
@@ -75,9 +94,9 @@ PlaybackController <- R6::R6Class(
 
       # Auto-select or validate BPM
       if (is.null(bpm)) {
-        self$bpm <- select_bpm(self$code_model)
+        self$bpm <- select_bpm_for_genre(self$code_model, genre)
       } else {
-        validate_bpm(bpm)
+        validate_bpm(bpm, genre)
         self$bpm <- as.integer(bpm)
       }
 
@@ -383,6 +402,35 @@ PlaybackController <- R6::R6Class(
     #' @field current_section_idx Current position in section cycle
     current_section_idx = 1L,
 
+    #' Manage buffer memory (prevent leaks)
+    #'
+    #' Adds buffer to history and prunes old buffers to stay under max_buffer_seconds
+    #' @param buffer Wave object to track
+    manage_buffer_memory = function(buffer) {
+      # Calculate buffer duration
+      buffer_duration <- length(buffer@left) / buffer@samp.rate
+
+      # Add to history with timestamp
+      self$buffer_history <- append(self$buffer_history, list(list(
+        buffer = buffer,
+        timestamp = Sys.time(),
+        duration = buffer_duration
+      )))
+
+      # Calculate total buffered seconds
+      total_seconds <- sum(sapply(self$buffer_history, function(x) x$duration))
+
+      # Prune oldest buffers if over limit
+      while (total_seconds > self$max_buffer_seconds && length(self$buffer_history) > 1) {
+        # Remove oldest buffer (first in list)
+        removed_duration <- self$buffer_history[[1]]$duration
+        self$buffer_history <- self$buffer_history[-1]
+        total_seconds <- total_seconds - removed_duration
+      }
+
+      invisible(NULL)
+    },
+
     #' Apply fade in/out to buffer for smooth transitions
     #'
     #' @param wave Wave object to apply fades to
@@ -430,7 +478,9 @@ PlaybackController <- R6::R6Class(
     generate_new_buffer = function() {
       section_type <- private$get_next_section()
       buffer <- self$generate_buffer(section_type, private$loop_bars)
-      private$apply_buffer_fades(buffer, fade_in = TRUE, fade_out = TRUE)
+      buffer <- private$apply_buffer_fades(buffer, fade_in = TRUE, fade_out = TRUE)
+      private$manage_buffer_memory(buffer)
+      buffer
     },
 
     #' Start the playback loop
@@ -443,6 +493,9 @@ PlaybackController <- R6::R6Class(
       section_type <- private$get_next_section()
       buffer <- self$generate_buffer(section_type, private$loop_bars)
       buffer <- private$apply_buffer_fades(buffer, fade_in = TRUE, fade_out = TRUE)
+
+      # Track buffer for memory management
+      private$manage_buffer_memory(buffer)
 
       # Store current buffer for re-looping
       private$current_buffer <- buffer
