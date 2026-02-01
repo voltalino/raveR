@@ -313,9 +313,11 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
 
     # Add drum fill every 8 bars (on bars 8, 16, 24, 32, etc.) for variation
     # Also always add on the last bar of the section
+    # 80% chance to play fill for natural variation
     is_fill_bar <- (bar %% 8 == 0) || (bar == bars)
+    should_play_fill <- runif(1) < 0.80
 
-    if (is_fill_bar && length(drum_elements) > 0) {
+    if (is_fill_bar && should_play_fill && length(drum_elements) > 0) {
       fill_wave <- generate_drum_fill(fill_type, bpm, sample_rate)
       fill_samples <- fill_wave@left
       bar_samples_vec <- bar_wave@left
