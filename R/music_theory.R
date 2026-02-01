@@ -17,7 +17,9 @@ SCALE_PATTERNS <- list(
   major = c(0L, 2L, 4L, 5L, 7L, 9L, 11L),
   natural_minor = c(0L, 2L, 3L, 5L, 7L, 8L, 10L),
   harmonic_minor = c(0L, 2L, 3L, 5L, 7L, 8L, 11L),
-  dorian = c(0L, 2L, 3L, 5L, 7L, 9L, 10L)
+  dorian = c(0L, 2L, 3L, 5L, 7L, 9L, 10L),
+  minor_pentatonic = c(0L, 3L, 5L, 7L, 10L),
+  major_pentatonic = c(0L, 2L, 4L, 7L, 9L)
 )
 
 # =============================================================================

@@ -77,6 +77,112 @@ raver_lead_note <- function(midi_note, duration_sec, velocity = 0.8, detune_cent
   )
 }
 
+#' Generate a percussive pluck lead note
+#'
+#' @description Creates a short, percussive pluck sound for rhythmic leads.
+#'   Uses a faster envelope and brighter tone than the standard lead.
+#'
+#' @param midi_note MIDI note number
+#' @param duration_sec Duration in seconds
+#' @param velocity Velocity from 0.0 to 1.0. Default 0.8.
+#'
+#' @return A Wave object containing the percussive note
+#'
+#' @export
+raver_pluck_note <- function(midi_note, duration_sec, velocity = 0.8) {
+  freq <- raver_midi_to_freq(midi_note)
+
+  # Generate oscillators - square wave dominant for plucky sound
+  square_main <- raver_square(freq, duration_sec, SAMPLE_RATE, duty = 0.25)
+  saw_sub <- raver_sawtooth(freq * 0.5, duration_sec, SAMPLE_RATE)  # Sub octave
+
+  # Mix oscillators (square dominant, saw for body)
+  mixed <- (square_main@left * 0.7 + saw_sub@left * 0.3)
+
+  # Higher cutoff for brighter attack, with envelope
+  n <- length(mixed)
+  filtered <- numeric(n)
+  if (n > 0) {
+    # Filter envelope: starts bright, darkens quickly
+    for (i in seq_len(n)) {
+      progress <- i / n
+      cutoff_hz <- 5000 * exp(-progress * 3) + 800  # Decays from 5800 to 800
+      alpha <- cutoff_hz / (cutoff_hz + SAMPLE_RATE / (2 * pi))
+      if (i == 1) {
+        filtered[i] <- mixed[i] * alpha
+      } else {
+        filtered[i] <- (1 - alpha) * filtered[i - 1] + alpha * mixed[i]
+      }
+    }
+  }
+
+  # Percussive ADSR: very fast attack, quick decay, low sustain
+  enveloped <- apply_adsr(
+    filtered,
+    SAMPLE_RATE,
+    attack = 0.002,   # 2ms attack
+    decay = 0.08,     # 80ms decay
+    sustain_level = 0.2,
+    release = 0.1
+  )
+
+  # Scale by velocity
+  enveloped <- enveloped * velocity
+
+  tuneR::Wave(
+    left = enveloped,
+    samp.rate = SAMPLE_RATE,
+    bit = BIT_DEPTH,
+    pcm = PCM_MODE
+  )
+}
+
+#' Apply rhythmic delay to audio
+#'
+#' @description Adds a rhythmic delay effect with feedback. Common for house
+#'   music leads - creates movement and fills space.
+#'
+#' @param samples Numeric vector of audio samples
+#' @param delay_sec Delay time in seconds
+#' @param feedback Feedback amount (0-0.9). Higher = more repeats. Default 0.4.
+#' @param mix Wet/dry mix (0-1). Default 0.5.
+#' @param sample_rate Sample rate. Default SAMPLE_RATE.
+#'
+#' @return Numeric vector with delay applied
+#'
+#' @export
+apply_rhythmic_delay <- function(samples, delay_sec, feedback = 0.4,
+                                  mix = 0.5, sample_rate = SAMPLE_RATE) {
+  n <- length(samples)
+  delay_samples <- as.integer(delay_sec * sample_rate)
+
+  if (delay_samples <= 0 || delay_samples >= n) {
+    return(samples)
+  }
+
+  # Clamp feedback to prevent runaway
+
+  feedback <- min(0.9, max(0, feedback))
+
+  # Create delay buffer with extra space for tails
+  output <- numeric(n + delay_samples * 4)
+  output[seq_len(n)] <- samples
+
+  # Apply feedback delay
+  for (i in (delay_samples + 1):length(output)) {
+    delayed_idx <- i - delay_samples
+    if (delayed_idx > 0 && delayed_idx <= length(output)) {
+      output[i] <- output[i] + output[delayed_idx] * feedback
+    }
+  }
+
+  # Mix wet/dry and trim to original length
+  wet <- output[seq_len(n)]
+  result <- samples * (1 - mix) + wet * mix
+
+  result
+}
+
 #' Generate a lead melody from a motif
 #'
 #' @description Creates a lead melody line from a motif pattern.

@@ -378,7 +378,7 @@ PlaybackController <- R6::R6Class(
     next_buffer = NULL,
 
     #' @field section_cycle Section types to cycle through for variety
-    section_cycle = c("drop", "breakdown", "drop", "build"),
+    section_cycle = c("drop", "breakdown", "build", "drop", "breakdown", "drop"),
 
     #' @field current_section_idx Current position in section cycle
     current_section_idx = 1L,

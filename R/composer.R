@@ -483,6 +483,8 @@ generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_
 #' @description Internal helper that creates lead melodies from function motifs.
 #'   Each function's motif provides a unique rhythm and note pattern derived from
 #'   its name. Different sections transform these rhythms in distinct ways.
+#'   Uses pentatonic scale for pleasant melodic content.
+#'   Includes two lead voices: main melodic lead and percussive pluck with delay.
 #'
 #' @param arrangement Full arrangement object
 #' @param section Section spec
@@ -495,18 +497,27 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
   bpm <- arrangement$bpm
   motifs <- arrangement$motifs
   section_type <- section$type
+  key <- arrangement$key
 
   # Need at least one motif for lead
   if (length(motifs) == 0) {
     return(NULL)
   }
 
+  # Build pentatonic scale for melodic content (sounds good with any notes)
+  penta_scale <- raver_build_scale(key, "minor_pentatonic", 2)
+
   # Calculate timing
   bar_duration_sec <- (60 / bpm) * 4
   step_duration_sec <- bar_duration_sec / 16
   total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
 
-  output <- numeric(total_samples)
+  # Dotted 8th delay time (classic house delay)
+  dotted_8th_sec <- step_duration_sec * 3  # 3 x 16th = dotted 8th
+
+  # Initialize outputs for both leads
+  lead1_output <- numeric(total_samples)
+  lead2_output <- numeric(total_samples)
 
   # Section-specific rhythm transformation and rendering
   for (bar in seq_len(bars)) {
@@ -516,10 +527,16 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
     motif_idx <- ((bar - 1) %% length(motifs)) + 1
     base_motif <- motifs[[motif_idx]]
 
-    # Transform rhythm based on section type
-    transformed <- transform_motif_for_section(base_motif, section_type, bar, bars)
+    # Map motif notes to pentatonic scale
+    penta_motif <- map_to_pentatonic(base_motif, penta_scale)
 
-    # Render the transformed motif for this bar
+    # Transform rhythm based on section type
+    transformed <- transform_motif_for_section(penta_motif, section_type, bar, bars)
+
+    # Create complementary rhythm for lead 2 (offset by 2 steps)
+    lead2_rhythm <- c(transformed$rhythm[15:16], transformed$rhythm[1:14])
+
+    # Render lead 1 (melodic, smooth)
     active_steps <- which(transformed$rhythm)
     for (i in seq_along(active_steps)) {
       step <- active_steps[i]
@@ -529,7 +546,6 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
       note <- transformed$notes[note_idx] + transformed$octave_shift
       velocity <- transformed$velocities[vel_idx] * transformed$velocity_scale
 
-      # Adjust step duration based on section
       note_duration <- step_duration_sec * transformed$note_length
 
       position <- bar_offset + as.integer((step - 1) * step_duration_sec * sample_rate) + 1
@@ -539,12 +555,72 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
       end_pos <- min(position + length(wave_samples) - 1, total_samples)
       if (position <= total_samples && end_pos >= position) {
         n_mix <- end_pos - position + 1
-        output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+        lead1_output[position:end_pos] <- lead1_output[position:end_pos] + wave_samples[seq_len(n_mix)]
+      }
+    }
+
+    # Render lead 2 (percussive pluck, with delay) - only in energetic sections
+    if (section_type %in% c("drop", "build")) {
+      active_steps2 <- which(lead2_rhythm)
+      for (i in seq_along(active_steps2)) {
+        step <- active_steps2[i]
+        note_idx <- ((i - 1) %% length(transformed$notes)) + 1
+
+        # Lead 2 plays an octave higher
+        note <- transformed$notes[note_idx] + transformed$octave_shift + 12
+        velocity <- 0.5 * transformed$velocity_scale
+
+        position <- bar_offset + as.integer((step - 1) * step_duration_sec * sample_rate) + 1
+        note_wave <- raver_pluck_note(note, step_duration_sec * 1.5, velocity)
+
+        wave_samples <- note_wave@left
+        end_pos <- min(position + length(wave_samples) - 1, total_samples)
+        if (position <= total_samples && end_pos >= position) {
+          n_mix <- end_pos - position + 1
+          lead2_output[position:end_pos] <- lead2_output[position:end_pos] + wave_samples[seq_len(n_mix)]
+        }
       }
     }
   }
 
-  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+  # Apply rhythmic delay to lead 2
+  if (any(lead2_output != 0)) {
+    lead2_output <- apply_rhythmic_delay(lead2_output, dotted_8th_sec,
+                                          feedback = 0.45, mix = 0.6)
+  }
+
+  # Mix both leads
+  combined <- lead1_output + lead2_output * 0.6
+
+  tuneR::Wave(left = combined, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+}
+
+#' Map motif notes to pentatonic scale
+#'
+#' @description Converts motif notes to the nearest notes in a pentatonic scale.
+#'   Ensures all melodic content fits within the pleasant pentatonic framework.
+#'
+#' @param motif Original motif
+#' @param penta_scale Pentatonic scale notes (MIDI numbers)
+#'
+#' @return Motif with notes mapped to pentatonic scale
+#' @keywords internal
+map_to_pentatonic <- function(motif, penta_scale) {
+  # For each note in motif, find nearest pentatonic note
+  new_notes <- vapply(motif$notes, function(n) {
+    # Find which octave the note is in relative to scale
+    octave_offset <- ((n - penta_scale[1]) %/% 12) * 12
+    # Map to scale degree
+    note_in_octave <- ((n - penta_scale[1]) %% 12)
+    # Find nearest scale degree
+    scale_degrees <- (penta_scale - penta_scale[1]) %% 12
+    nearest_idx <- which.min(abs(scale_degrees - note_in_octave))
+    # Return mapped note
+    penta_scale[nearest_idx] + octave_offset
+  }, integer(1))
+
+  motif$notes <- as.integer(new_notes)
+  motif
 }
 
 #' Transform motif rhythm and notes for a specific section type

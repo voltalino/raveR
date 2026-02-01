@@ -169,12 +169,12 @@ calculate_complexity_factor <- function(code_model) {
 #' @return List of section specs
 #' @keywords internal
 build_sections <- function(complexity, code_model) {
-  # Base structure: always have intro, drop, outro
-  # Add build/breakdown based on complexity
+  # Extended structure for longer, more dynamic tracks
+  # Structure: intro -> build -> drop -> breakdown -> build2 -> drop2 -> breakdown2 -> drop3 -> outro
   sections <- list()
 
-  # Intro - length scales slightly with complexity
-  intro_bars <- if (complexity > 0.5) 8L else 4L
+  # Intro - atmospheric opening
+  intro_bars <- if (complexity > 0.5) 16L else 8L
   sections$intro <- list(
     type = "intro",
     bars = intro_bars,
@@ -184,21 +184,19 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$intro$filter_end
   )
 
-  # Build - only if complexity warrants it
-  if (complexity > 0.3) {
-    build_bars <- if (complexity > 0.6) 8L else 4L
-    sections$build <- list(
-      type = "build",
-      bars = build_bars,
-      description = SECTION_TYPES$build$description,
-      elements = SECTION_TYPES$build$elements,
-      filter_start = SECTION_TYPES$build$filter_start,
-      filter_end = SECTION_TYPES$build$filter_end
-    )
-  }
+  # First Build
+  build_bars <- if (complexity > 0.6) 16L else 8L
+  sections$build <- list(
+    type = "build",
+    bars = build_bars,
+    description = SECTION_TYPES$build$description,
+    elements = SECTION_TYPES$build$elements,
+    filter_start = SECTION_TYPES$build$filter_start,
+    filter_end = SECTION_TYPES$build$filter_end
+  )
 
-  # Drop - core section, scales with complexity
-  drop_bars <- if (complexity > 0.7) 16L else if (complexity > 0.4) 12L else 8L
+  # First Drop - main energy
+  drop_bars <- if (complexity > 0.7) 32L else if (complexity > 0.4) 24L else 16L
   sections$drop <- list(
     type = "drop",
     bars = drop_bars,
@@ -208,31 +206,61 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$drop$filter_end
   )
 
-  # Breakdown - only for more complex tracks
-  if (complexity > 0.5) {
-    breakdown_bars <- if (complexity > 0.7) 8L else 4L
-    sections$breakdown <- list(
+  # First Breakdown - tension release
+  breakdown_bars <- if (complexity > 0.7) 16L else 8L
+  sections$breakdown <- list(
+    type = "breakdown",
+    bars = breakdown_bars,
+    description = SECTION_TYPES$breakdown$description,
+    elements = SECTION_TYPES$breakdown$elements,
+    filter_start = SECTION_TYPES$breakdown$filter_start,
+    filter_end = SECTION_TYPES$breakdown$filter_end
+  )
+
+  # Second Build - rebuilding energy
+  sections$build2 <- list(
+    type = "build",
+    bars = build_bars,
+    description = "Rebuilding energy after breakdown",
+    elements = SECTION_TYPES$build$elements,
+    filter_start = 600,
+    filter_end = 4000
+  )
+
+  # Second Drop - peak energy
+  sections$drop2 <- list(
+    type = "drop",
+    bars = drop_bars,
+    description = "Peak energy section",
+    elements = SECTION_TYPES$drop$elements,
+    filter_start = SECTION_TYPES$drop$filter_start,
+    filter_end = SECTION_TYPES$drop$filter_end
+  )
+
+  # Second Breakdown (shorter) - for complex tracks
+  if (complexity > 0.4) {
+    sections$breakdown2 <- list(
       type = "breakdown",
-      bars = breakdown_bars,
-      description = SECTION_TYPES$breakdown$description,
+      bars = breakdown_bars %/% 2L,
+      description = "Brief tension break",
       elements = SECTION_TYPES$breakdown$elements,
-      filter_start = SECTION_TYPES$breakdown$filter_start,
-      filter_end = SECTION_TYPES$breakdown$filter_end
+      filter_start = 2000,
+      filter_end = 1500
     )
 
-    # Second drop after breakdown
-    sections$drop2 <- list(
+    # Third Drop - final climax
+    sections$drop3 <- list(
       type = "drop",
       bars = drop_bars,
-      description = SECTION_TYPES$drop$description,
+      description = "Final climax",
       elements = SECTION_TYPES$drop$elements,
       filter_start = SECTION_TYPES$drop$filter_start,
       filter_end = SECTION_TYPES$drop$filter_end
     )
   }
 
-  # Outro
-  outro_bars <- if (complexity > 0.5) 8L else 4L
+  # Outro - wind down
+  outro_bars <- if (complexity > 0.5) 16L else 8L
   sections$outro <- list(
     type = "outro",
     bars = outro_bars,
