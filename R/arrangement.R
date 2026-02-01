@@ -296,10 +296,40 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
   # Create patterns for drums only
   patterns <- create_section_patterns(drum_elements, arrangement)
 
+  # Determine fill type based on section
+  fill_type <- switch(section$type,
+    "intro" = "buildup",
+    "build" = "buildup",
+    "drop" = "basic",
+    "breakdown" = "breakdown",
+    "outro" = "breakdown",
+    "basic"
+  )
+
   # Render all bars for drums
   bar_waves <- list()
   for (bar in seq_len(bars)) {
     bar_wave <- combine_patterns(patterns, bpm, sample_rate)
+
+    # Add drum fill on the last bar of the section
+    if (bar == bars && length(drum_elements) > 0) {
+      fill_wave <- generate_drum_fill(fill_type, bpm, sample_rate)
+      fill_samples <- fill_wave@left
+      bar_samples_vec <- bar_wave@left
+      fill_level <- 0.7
+
+      n_mix <- min(length(fill_samples), length(bar_samples_vec))
+      bar_samples_vec[seq_len(n_mix)] <- bar_samples_vec[seq_len(n_mix)] +
+                                          fill_samples[seq_len(n_mix)] * fill_level
+
+      bar_wave <- tuneR::Wave(
+        left = bar_samples_vec,
+        samp.rate = sample_rate,
+        bit = BIT_DEPTH,
+        pcm = PCM_MODE
+      )
+    }
+
     bar_waves[[bar]] <- bar_wave
   }
 
@@ -327,7 +357,7 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
   if (has_pad) {
     pad_wave <- generate_pad_progression(arrangement, section, bars, sample_rate)
     pad_samples <- pad_wave@left
-    pad_level <- 0.55
+    pad_level <- 0.70
     n_to_mix <- min(length(pad_samples), length(all_samples))
     all_samples[seq_len(n_to_mix)] <- all_samples[seq_len(n_to_mix)] +
                                        pad_samples[seq_len(n_to_mix)] * pad_level
@@ -351,6 +381,71 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
 
   tuneR::Wave(
     left = filtered,
+    samp.rate = sample_rate,
+    bit = BIT_DEPTH,
+    pcm = PCM_MODE
+  )
+}
+
+#' Generate a drum fill pattern for transitions
+#'
+#' @description Creates a drum fill pattern for the last bar of a section.
+#'   Uses snare rolls building to the downbeat.
+#'
+#' @param fill_type Character type of fill: "basic", "buildup", "breakdown"
+#' @param bpm Numeric beats per minute
+#' @param sample_rate Integer sample rate
+#'
+#' @return A Wave object containing the drum fill
+#' @keywords internal
+generate_drum_fill <- function(fill_type = "basic", bpm = 120, sample_rate = SAMPLE_RATE) {
+  bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * sample_rate)
+
+  output <- numeric(total_samples)
+
+  # Different fill patterns based on type
+  if (fill_type == "buildup") {
+    # Building snare roll: sparse to dense in second half of bar
+    # Steps 9-16 get progressively denser
+    snare_steps <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+                     TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE)
+    velocities <- c(0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0.6, 0, 0.7, 0.8, 0.9, 1.0)
+  } else if (fill_type == "breakdown") {
+    # Minimal fill - just accent hits
+    snare_steps <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+                     FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE)
+    velocities <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.7, 0, 0.8, 0)
+  } else {
+    # Basic fill - classic house fill pattern
+    snare_steps <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+                     TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE)
+    velocities <- c(0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0, 0.7, 0, 0.8, 0, 0.9, 1.0)
+  }
+
+  # Render snare hits
+  for (step in seq_along(snare_steps)) {
+    if (snare_steps[step]) {
+      position <- as.integer((step - 1) * step_duration_sec * sample_rate) + 1
+      velocity <- velocities[step]
+
+      # Load and scale snare sample
+      snare_wave <- raver_drum_hit("snare", velocity)
+      wave_samples <- snare_wave@left
+
+      n_wave <- length(wave_samples)
+      end_pos <- min(position + n_wave - 1, total_samples)
+
+      if (position <= total_samples && end_pos >= position) {
+        n_to_mix <- end_pos - position + 1
+        output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_to_mix)]
+      }
+    }
+  }
+
+  tuneR::Wave(
+    left = output,
     samp.rate = sample_rate,
     bit = BIT_DEPTH,
     pcm = PCM_MODE
