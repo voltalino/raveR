@@ -197,8 +197,10 @@ build_sections <- function(complexity, code_model, complexity_change = "same", g
   )
 
   # Intro - atmospheric opening (shorter if complexity dropped)
-  intro_bars <- as.integer(if (complexity > 0.5) 16L else 8L) *
-                ifelse(complexity_change == "down", 0.5, 1.0)
+  intro_bars <- as.integer(
+    (if (complexity > 0.5) 16L else 8L) *
+    ifelse(complexity_change == "down", 0.5, 1.0)
+  )
   sections$intro <- list(
     type = "intro",
     bars = intro_bars,
@@ -221,8 +223,9 @@ build_sections <- function(complexity, code_model, complexity_change = "same", g
 
   # First Drop - main energy (longer if complexity increased)
   drop_bars <- as.integer(
-    if (complexity > 0.7) 32L else if (complexity > 0.4) 24L else 16L
-  ) * change_multiplier
+    (if (complexity > 0.7) 32L else if (complexity > 0.4) 24L else 16L) *
+    change_multiplier
+  )
   sections$drop <- list(
     type = "drop",
     bars = drop_bars,
@@ -233,8 +236,10 @@ build_sections <- function(complexity, code_model, complexity_change = "same", g
   )
 
   # First Breakdown - tension release (longer if complexity dropped)
-  breakdown_bars <- as.integer(if (complexity > 0.7) 16L else 8L) *
-                   ifelse(complexity_change == "down", 1.5, 1.0)
+  breakdown_bars <- as.integer(
+    (if (complexity > 0.7) 16L else 8L) *
+    ifelse(complexity_change == "down", 1.5, 1.0)
+  )
   sections$breakdown <- list(
     type = "breakdown",
     bars = breakdown_bars,

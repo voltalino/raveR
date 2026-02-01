@@ -96,7 +96,7 @@ get_genre_config <- function(genre) {
       bpm_range = c(160, 180),
       drum_pattern = "breakbeat_fast",
       swing_amount = 0.25,
-      bass_style = " Reese",
+      bass_style = "Reese",
       pad_style = "stabs",
       arrangement = "drop_heavy"
     )
@@ -125,6 +125,23 @@ select_bpm_for_genre <- function(code_model, genre = "deep_house") {
   range_size <- bpm_range[2] - bpm_range[1] + 1
   bpm <- bpm_range[1] + (hash_int %% range_size)
   as.integer(bpm)
+}
+
+#' Apply Genre-Specific Swing
+#'
+#' @description Applies swing/groove based on genre configuration.
+#'   Modifies timing to match genre feel.
+#'
+#' @param wave tuneR Wave object
+#' @param genre_config List from get_genre_config()
+#'
+#' @return Wave object with swing applied
+#' @keywords internal
+apply_genre_swing <- function(wave, genre_config) {
+  # For now, swing is applied at the sequencer level
+  # This is a placeholder for future stereo/micro-timing swing effects
+  # Currently the swing_amount from genre_config is used in drum patterns
+  wave
 }
 
 # =============================================================================
@@ -202,9 +219,9 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
   # Create arrangement with genre and dynamic complexity response
   arrangement <- create_arrangement(code_model, bpm, genre_config)
 
-  # Generate each section
+  # Generate each section with genre-specific rendering
   sections <- lapply(arrangement$sections, function(section) {
-    render_section(section, arrangement, sample_rate)
+    render_section(section, arrangement, sample_rate, genre_config)
   })
 
   # Concatenate sections
@@ -214,6 +231,12 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
     # Edge case: empty arrangement
     track <- create_silence(2, sample_rate)
   }
+
+  # Apply code-driven effects (reverb/delay based on complexity)
+  track <- apply_code_effects(track, code_model, genre)
+
+  # Apply genre-specific swing to humanize timing
+  track <- apply_genre_swing(track, genre_config)
 
   # Master processing
   track <- normalize_mix(track, headroom_db = -3)
