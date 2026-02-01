@@ -311,12 +311,15 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
   for (bar in seq_len(bars)) {
     bar_wave <- combine_patterns(patterns, bpm, sample_rate)
 
-    # Add drum fill on the last bar of the section
-    if (bar == bars && length(drum_elements) > 0) {
+    # Add drum fill every 8 bars (on bars 8, 16, 24, 32, etc.) for variation
+    # Also always add on the last bar of the section
+    is_fill_bar <- (bar %% 8 == 0) || (bar == bars)
+
+    if (is_fill_bar && length(drum_elements) > 0) {
       fill_wave <- generate_drum_fill(fill_type, bpm, sample_rate)
       fill_samples <- fill_wave@left
       bar_samples_vec <- bar_wave@left
-      fill_level <- 0.7
+      fill_level <- 0.75
 
       n_mix <- min(length(fill_samples), length(bar_samples_vec))
       bar_samples_vec[seq_len(n_mix)] <- bar_samples_vec[seq_len(n_mix)] +
