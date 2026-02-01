@@ -481,7 +481,8 @@ generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_
 #' Generate lead melody for a section
 #'
 #' @description Internal helper that creates lead melodies using function motifs.
-#'   Varies the lead character based on section type for musical interest.
+#'   Creates distinct melodic content for each section type with different
+#'   rhythms, note patterns, and phrase structures.
 #'
 #' @param arrangement Full arrangement object
 #' @param section Section spec
@@ -494,158 +495,235 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
   bpm <- arrangement$bpm
   motifs <- arrangement$motifs
   section_type <- section$type
+  key <- arrangement$key
 
   # Need at least one motif for lead
   if (length(motifs) == 0) {
     return(NULL)
   }
 
-  # Section-specific lead parameters
-  lead_config <- switch(section_type,
-    "intro" = list(
-      motif_idx = 1,
-      octave_shift = 12,  # Higher, ethereal
-      velocity = 0.4,
-      evolution = 0.3,
-      sparseness = 0.5,   # Only play 50% of notes
-      add_second = FALSE
-    ),
-    "build" = list(
-      motif_idx = 1,
-      octave_shift = 0,
-      velocity = 0.55,
-      evolution = 0.15,
-      sparseness = 0.7,   # Building up
-      add_second = FALSE
-    ),
-    "drop" = list(
-      motif_idx = 1,
-      octave_shift = 0,
-      velocity = 0.7,
-      evolution = 0.0,    # Original motif, full energy
-      sparseness = 1.0,   # All notes
-      add_second = TRUE
-    ),
-    "breakdown" = list(
-      motif_idx = if (length(motifs) >= 2) 2 else 1,  # Use different motif
-      octave_shift = 12,  # Higher, atmospheric
-      velocity = 0.5,
-      evolution = 0.4,    # More variation
-      sparseness = 0.4,   # Sparse, breathing room
-      add_second = FALSE
-    ),
-    "outro" = list(
-      motif_idx = 1,
-      octave_shift = 12,
-      velocity = 0.35,
-      evolution = 0.5,
-      sparseness = 0.3,   # Very sparse, fading
-      add_second = FALSE
-    ),
-    # Default (drop-like)
-    list(
-      motif_idx = 1,
-      octave_shift = 0,
-      velocity = 0.6,
-      evolution = 0.0,
-      sparseness = 1.0,
-      add_second = length(motifs) >= 2
-    )
+  # Build scale for melodic generation
+  scale <- raver_build_scale(key, "natural_minor", 2)
+
+  # Calculate timing
+ bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+
+  output <- numeric(total_samples)
+
+  # Section-specific melodic generation
+  lead_wave <- switch(section_type,
+    "intro" = generate_intro_lead(scale, bpm, bars, sample_rate),
+    "build" = generate_build_lead(scale, motifs, bpm, bars, sample_rate),
+    "drop" = generate_drop_lead(scale, motifs, bpm, bars, sample_rate),
+    "breakdown" = generate_breakdown_lead(scale, motifs, bpm, bars, sample_rate),
+    "outro" = generate_outro_lead(scale, bpm, bars, sample_rate),
+    generate_drop_lead(scale, motifs, bpm, bars, sample_rate)  # default
   )
-
-  # Select and prepare motif
-  motif_idx <- min(lead_config$motif_idx, length(motifs))
-  base_motif <- motifs[[motif_idx]]
-
-  # Evolve motif if needed
-  if (lead_config$evolution > 0) {
-    base_motif <- evolve_motif(base_motif, variation = lead_config$evolution)
-  }
-
-  # Apply octave shift
-  if (lead_config$octave_shift != 0) {
-    base_motif$notes <- base_motif$notes + lead_config$octave_shift
-  }
-
-  # Apply sparseness (randomly mute some notes)
-  if (lead_config$sparseness < 1.0) {
-    base_motif <- sparse_motif(base_motif, lead_config$sparseness)
-  }
-
-  # Generate main lead
-  lead_wave <- raver_lead_melody(base_motif, bpm, bars, velocity = lead_config$velocity)
-
-  # Add second lead layer for drops (countermelody)
-  if (lead_config$add_second && length(motifs) >= 2) {
-    second_motif <- evolve_motif(motifs[[2]], variation = 0.25)
-    # Offset second motif by an octave for separation
-    second_motif$notes <- second_motif$notes + 7  # Fifth up for harmony
-    second_lead <- raver_lead_melody(second_motif, bpm, bars, velocity = 0.35)
-
-    # Mix leads
-    lead_samples <- lead_wave@left
-    second_samples <- second_lead@left
-    n_mix <- min(length(lead_samples), length(second_samples))
-
-    lead_samples[seq_len(n_mix)] <- lead_samples[seq_len(n_mix)] + second_samples[seq_len(n_mix)]
-
-    lead_wave <- tuneR::Wave(
-      left = lead_samples,
-      samp.rate = sample_rate,
-      bit = BIT_DEPTH,
-      pcm = PCM_MODE
-    )
-  }
 
   lead_wave
 }
 
-#' Make a motif sparser by randomly removing notes
-#'
-#' @description Internal helper that removes notes from a motif based on
-#'   a probability factor, creating sparser patterns.
-#'
-#' @param motif A motif from generate_motif()
-#' @param keep_probability Probability (0-1) of keeping each note
-#'
-#' @return A modified motif with fewer active notes
+#' Generate intro lead - sparse, high, ethereal arpeggio
 #' @keywords internal
-sparse_motif <- function(motif, keep_probability) {
-  # Ensure at least one note remains
-  active_indices <- which(motif$rhythm)
-  if (length(active_indices) <= 1) return(motif)
+generate_intro_lead <- function(scale, bpm, bars, sample_rate) {
+  bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+  output <- numeric(total_samples)
 
-  # Randomly decide which notes to keep
-  keep <- runif(length(active_indices)) < keep_probability
+  # Simple rising arpeggio pattern, one note per bar on beat 1
+  # Uses higher octave of scale
+  high_scale <- scale + 12
 
-  # Always keep at least one note (the first one)
-  if (!any(keep)) keep[1] <- TRUE
+  for (bar in seq_len(bars)) {
+    note_idx <- ((bar - 1) %% length(high_scale)) + 1
+    note <- high_scale[note_idx]
+    velocity <- 0.35 + (bar / bars) * 0.15  # Gradually louder
 
-  # Update rhythm
-  new_rhythm <- motif$rhythm
-  remove_indices <- active_indices[!keep]
-  new_rhythm[remove_indices] <- FALSE
+    position <- as.integer((bar - 1) * bar_duration_sec * sample_rate) + 1
+    note_wave <- raver_lead_note(note, step_duration_sec * 4, velocity)
 
-  # Adjust notes and velocities arrays
-  kept_count <- sum(keep)
-  new_notes <- motif$notes[keep[seq_len(min(length(keep), length(motif$notes)))]]
-  new_velocities <- motif$velocities[keep[seq_len(min(length(keep), length(motif$velocities)))]]
-
-  # Ensure we have enough notes/velocities
-  if (length(new_notes) < kept_count) {
-    new_notes <- rep(new_notes, length.out = kept_count)
-  }
-  if (length(new_velocities) < kept_count) {
-    new_velocities <- rep(new_velocities, length.out = kept_count)
+    wave_samples <- note_wave@left
+    end_pos <- min(position + length(wave_samples) - 1, total_samples)
+    if (position <= total_samples && end_pos >= position) {
+      n_mix <- end_pos - position + 1
+      output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+    }
   }
 
-  list(
-    name = motif$name,
-    rhythm = new_rhythm,
-    notes = as.integer(new_notes),
-    velocities = as.numeric(new_velocities),
-    seed = paste0(motif$seed, "_sparse")
+  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+}
+
+#' Generate build lead - ascending phrases building energy
+#' @keywords internal
+generate_build_lead <- function(scale, motifs, bpm, bars, sample_rate) {
+  bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+  output <- numeric(total_samples)
+
+  # Building pattern: starts sparse, gets denser
+  # 8th notes that accelerate to 16ths in later bars
+  for (bar in seq_len(bars)) {
+    bar_offset <- (bar - 1) * as.integer(bar_duration_sec * sample_rate)
+    progress <- bar / bars  # 0 to 1
+
+    # More notes as we progress
+    if (progress < 0.5) {
+      steps <- c(1, 9)  # Just beats 1 and 3
+    } else if (progress < 0.75) {
+      steps <- c(1, 5, 9, 13)  # All beats
+    } else {
+      steps <- c(1, 3, 5, 7, 9, 11, 13, 15)  # 8th notes
+    }
+
+    for (step in steps) {
+      # Ascending scale pattern
+      note_idx <- ((bar + step - 2) %% length(scale)) + 1
+      note <- scale[note_idx]
+      velocity <- 0.4 + progress * 0.3
+
+      position <- bar_offset + as.integer((step - 1) * step_duration_sec * sample_rate) + 1
+      note_wave <- raver_lead_note(note, step_duration_sec * 1.5, velocity)
+
+      wave_samples <- note_wave@left
+      end_pos <- min(position + length(wave_samples) - 1, total_samples)
+      if (position <= total_samples && end_pos >= position) {
+        n_mix <- end_pos - position + 1
+        output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+      }
+    }
+  }
+
+  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+}
+
+#' Generate drop lead - energetic riff with motif-based melody
+#' @keywords internal
+generate_drop_lead <- function(scale, motifs, bpm, bars, sample_rate) {
+  bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+  output <- numeric(total_samples)
+
+  # Use motif for the main riff
+  main_motif <- motifs[[1]]
+
+  # Create call-and-response: motif plays bars 1-2, variation plays bars 3-4
+  for (bar in seq_len(bars)) {
+    bar_offset <- (bar - 1) * as.integer(bar_duration_sec * sample_rate)
+    phrase_position <- ((bar - 1) %% 4) + 1  # 1-4 repeating
+
+    # Select motif variation based on phrase position
+    current_motif <- if (phrase_position <= 2) {
+      main_motif  # Original
+    } else {
+      evolve_motif(main_motif, variation = 0.3)  # Response variation
+    }
+
+    # Octave shift for phrase 3-4 (response is higher)
+    octave_shift <- if (phrase_position > 2) 5 else 0  # Fourth up for response
+
+    active_steps <- which(current_motif$rhythm)
+    for (i in seq_along(active_steps)) {
+      step <- active_steps[i]
+      note_idx <- ((i - 1) %% length(current_motif$notes)) + 1
+      note <- current_motif$notes[note_idx] + octave_shift
+      vel_idx <- ((i - 1) %% length(current_motif$velocities)) + 1
+      velocity <- current_motif$velocities[vel_idx] * 0.7
+
+      position <- bar_offset + as.integer((step - 1) * step_duration_sec * sample_rate) + 1
+      note_wave <- raver_lead_note(note, step_duration_sec * 2, velocity)
+
+      wave_samples <- note_wave@left
+      end_pos <- min(position + length(wave_samples) - 1, total_samples)
+      if (position <= total_samples && end_pos >= position) {
+        n_mix <- end_pos - position + 1
+        output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+      }
+    }
+  }
+
+  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+}
+
+#' Generate breakdown lead - sparse, melodic, long notes
+#' @keywords internal
+generate_breakdown_lead <- function(scale, motifs, bpm, bars, sample_rate) {
+  bar_duration_sec <- (60 / bpm) * 4
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+  output <- numeric(total_samples)
+
+  # Breakdown: long sustained notes, descending melody
+  # One note every 2 bars, high and atmospheric
+  high_scale <- scale + 12
+
+  # Create a descending phrase
+  phrase_notes <- c(
+    high_scale[min(7, length(high_scale))],  # 7th
+    high_scale[min(5, length(high_scale))],  # 5th
+    high_scale[min(3, length(high_scale))],  # 3rd
+    high_scale[1]                             # Root
   )
+
+  note_idx <- 1
+  for (bar in seq(1, bars, by = 2)) {
+    note <- phrase_notes[((note_idx - 1) %% length(phrase_notes)) + 1]
+    note_idx <- note_idx + 1
+    velocity <- 0.5
+
+    position <- as.integer((bar - 1) * bar_duration_sec * sample_rate) + 1
+    # Long sustained note (1.5 bars)
+    note_wave <- raver_lead_note(note, bar_duration_sec * 1.5, velocity)
+
+    wave_samples <- note_wave@left
+    end_pos <- min(position + length(wave_samples) - 1, total_samples)
+    if (position <= total_samples && end_pos >= position) {
+      n_mix <- end_pos - position + 1
+      output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+    }
+  }
+
+  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
+}
+
+#' Generate outro lead - fading echoes
+#' @keywords internal
+generate_outro_lead <- function(scale, bpm, bars, sample_rate) {
+  bar_duration_sec <- (60 / bpm) * 4
+  step_duration_sec <- bar_duration_sec / 16
+  total_samples <- as.integer(bar_duration_sec * bars * sample_rate)
+  output <- numeric(total_samples)
+
+  # Outro: echoing fragments that fade out
+  high_scale <- scale + 12
+
+  for (bar in seq_len(bars)) {
+    # Fewer notes as we progress, fading
+    progress <- bar / bars
+    velocity <- 0.5 * (1 - progress * 0.7)  # Fade from 0.5 to 0.15
+
+    if (runif(1) > progress * 0.5) {  # Probability decreases
+      # Random note from upper scale, placed on offbeat
+      note <- high_scale[sample(length(high_scale), 1)]
+      step <- sample(c(3, 7, 11, 15), 1)  # Offbeats
+
+      position <- as.integer((bar - 1) * bar_duration_sec * sample_rate +
+                             (step - 1) * step_duration_sec * sample_rate) + 1
+      note_wave <- raver_lead_note(note, step_duration_sec * 3, velocity)
+
+      wave_samples <- note_wave@left
+      end_pos <- min(position + length(wave_samples) - 1, total_samples)
+      if (position <= total_samples && end_pos >= position) {
+        n_mix <- end_pos - position + 1
+        output[position:end_pos] <- output[position:end_pos] + wave_samples[seq_len(n_mix)]
+      }
+    }
+  }
+
+  tuneR::Wave(left = output, samp.rate = sample_rate, bit = BIT_DEPTH, pcm = PCM_MODE)
 }
 
 #' Reset RNG state

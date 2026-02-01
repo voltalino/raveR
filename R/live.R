@@ -377,6 +377,12 @@ PlaybackController <- R6::R6Class(
     #' @field next_buffer Pre-generated buffer for after transition
     next_buffer = NULL,
 
+    #' @field section_cycle Section types to cycle through for variety
+    section_cycle = c("drop", "breakdown", "drop", "build"),
+
+    #' @field current_section_idx Current position in section cycle
+    current_section_idx = 1L,
+
     #' Apply fade in/out to buffer for smooth transitions
     #'
     #' @param wave Wave object to apply fades to
@@ -409,11 +415,21 @@ PlaybackController <- R6::R6Class(
       )
     },
 
+    #' Get next section type from cycle
+    #'
+    #' Advances through the section cycle for variety
+    get_next_section = function() {
+      section <- private$section_cycle[private$current_section_idx]
+      private$current_section_idx <- (private$current_section_idx %% length(private$section_cycle)) + 1L
+      section
+    },
+
     #' Generate new buffer from updated code model
     #'
     #' Pre-generates buffer while current loop finishes playing
     generate_new_buffer = function() {
-      buffer <- self$generate_buffer("drop", private$loop_bars)
+      section_type <- private$get_next_section()
+      buffer <- self$generate_buffer(section_type, private$loop_bars)
       private$apply_buffer_fades(buffer, fade_in = TRUE, fade_out = TRUE)
     },
 
@@ -423,8 +439,9 @@ PlaybackController <- R6::R6Class(
     start_loop = function() {
       if (!self$is_playing) return(invisible(NULL))
 
-      # Generate a long buffer (32 bars = ~64 seconds)
-      buffer <- self$generate_buffer("drop", private$loop_bars)
+      # Generate a long buffer with current section type
+      section_type <- private$get_next_section()
+      buffer <- self$generate_buffer(section_type, private$loop_bars)
       buffer <- private$apply_buffer_fades(buffer, fade_in = TRUE, fade_out = TRUE)
 
       # Store current buffer for re-looping
