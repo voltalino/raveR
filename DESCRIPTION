@@ -2,8 +2,8 @@ Package: raveR
 Title: Transform R Scripts into Deep House Music
 Version: 0.1.0
 Authors@R: c(
-    person("Nick", "Voltalino", email = "nick@example.com", role = c("aut", "cre")),
-    person("Stal", "Contributor", role = "ctb")
+    person("Nim", "Voltalino", email = "nim.voltalino@proton.me", role = c("aut", "cre")),
+    person("Stal", "Vedro", role = "ctb")
 )
 Description: Transform R scripts into listenable deep house music. Analyzes
     code structure (functions, control flow, complexity) and maps it to
