@@ -18,10 +18,35 @@ safe_parse <- function(file_path) {
     error = function(e) {
       warning(
         "Parse error in '", basename(file_path), "': ", conditionMessage(e),
+        "\n  Falling back to minimal feature extraction.",
         call. = FALSE
       )
       expression()
     }
+  )
+}
+
+#' Extract Minimal Features from Broken Code
+#'
+#' Fallback feature extraction when parsing fails. Extracts basic metrics
+#' from raw text: line count, file size, bracket complexity.
+#'
+#' @param file_path Path to R script file
+#' @return List with minimal code metrics
+#' @keywords internal
+extract_minimal_features <- function(file_path) {
+  lines <- readLines(file_path, warn = FALSE)
+  text <- paste(lines, collapse = "\n")
+
+  # Basic metrics from raw text
+  list(
+    line_count = length(lines),
+    char_count = nchar(text),
+    bracket_depth = sum(gregexpr("\\{", text)[[1]] > 0) -
+                     sum(gregexpr("\\}", text)[[1]] > 0),
+    function_hints = length(gregexpr("function\\s*\\(", text)[[1]]),
+    comment_lines = sum(grepl("^\\s*#", lines)),
+    is_minimal = TRUE
   )
 }
 

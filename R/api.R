@@ -16,8 +16,9 @@ NULL
 #' @param script_path Path to the R script file to transform into music
 #' @param output_path Path for the output audio file. Format is detected from
 #'   extension (.wav or .mp3)
-#' @param bpm Numeric tempo. If NULL, auto-selects based on file hash within
+#' @param bpm Numeric tempo (60-180 BPM). If NULL, auto-selects based on file hash within
 #'   118-124 range (default NULL)
+#' @param genre Character: "deep_house", "techno", "ambient", or "drum_bass" (default: "deep_house")
 #' @param seed Random seed for reproducibility. If NULL, uses file hash for
 #'   determinism (default NULL)
 #'
@@ -58,13 +59,34 @@ NULL
 #' # With explicit seed for reproducibility
 #' composeR("my_analysis.R", "output.wav", seed = 12345)
 #' }
-composeR <- function(script_path, output_path, bpm = NULL, seed = NULL) {
+composeR <- function(script_path, output_path, bpm = NULL, seed = NULL, genre = "deep_house") {
   # Validate script exists
-
-if (!file.exists(script_path)) {
+  if (!file.exists(script_path)) {
     stop(
       "Script not found: '", script_path, "'",
       "\n  Please provide a valid path to an R script file.",
+      call. = FALSE
+    )
+  }
+
+  # Validate BPM range
+  if (!is.null(bpm)) {
+    bpm <- as.numeric(bpm)
+    if (is.na(bpm) || bpm < 60 || bpm > 180) {
+      stop(
+        "BPM must be between 60 and 180 (got: ", bpm, ")",
+        "\n  Extreme tempos can cause synthesis instability.",
+        call. = FALSE
+      )
+    }
+  }
+
+  # Validate genre
+  valid_genres <- c("deep_house", "techno", "ambient", "drum_bass")
+  if (!genre %in% valid_genres) {
+    stop(
+      "Invalid genre: '", genre, "'",
+      "\n  Valid genres: ", paste(valid_genres, collapse = ", "),
       call. = FALSE
     )
   }
@@ -75,8 +97,8 @@ if (!file.exists(script_path)) {
   # Analyze the script (handles parse errors gracefully with warning)
   code_model <- raver_analyze(script_path)
 
-  # Compose the track
-  track <- raver_compose(code_model, bpm = bpm, seed = seed)
+  # Compose the track with genre
+  track <- raver_compose(code_model, bpm = bpm, seed = seed, genre = genre)
 
   # Export based on format
   if (output_format == "wav") {
@@ -164,10 +186,24 @@ detect_output_format <- function(output_path) {
 #' # With custom BPM
 #' playR("my_analysis.R", bpm = 122)
 #' }
-playR <- function(script_path, bpm = NULL) {
+playR <- function(script_path, bpm = NULL, genre = "deep_house") {
   # Validate script exists
   if (!file.exists(script_path)) {
     stop("Script not found: ", script_path, call. = FALSE)
+  }
+
+  # Validate BPM range
+  if (!is.null(bpm)) {
+    bpm <- as.numeric(bpm)
+    if (is.na(bpm) || bpm < 60 || bpm > 180) {
+      stop("BPM must be between 60 and 180", call. = FALSE)
+    }
+  }
+
+  # Validate genre
+  valid_genres <- c("deep_house", "techno", "ambient", "drum_bass")
+  if (!genre %in% valid_genres) {
+    stop("Invalid genre. Valid: deep_house, techno, ambient, drum_bass", call. = FALSE)
   }
 
   # Stop any existing playback
@@ -175,8 +211,8 @@ playR <- function(script_path, bpm = NULL) {
     stopR()
   }
 
-  # Create controller
-  controller <- PlaybackController$new(script_path, bpm)
+  # Create controller with buffer limits for memory stability
+  controller <- PlaybackController$new(script_path, bpm, genre, max_buffer_seconds = 300)
 
   # Store in package environment
   .live_env$controller <- controller

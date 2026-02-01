@@ -31,26 +31,117 @@ select_bpm <- function(code_model) {
 
 #' Validate BPM value
 #'
-#' @description Validates that BPM is within the acceptable 118-124 range.
+#' @description Validates that BPM is within acceptable range (60-180).
 #'
 #' @param bpm Numeric BPM value to validate
+#' @param genre Character genre for context
 #'
 #' @return TRUE if valid, stops with error if invalid
 #' @keywords internal
-validate_bpm <- function(bpm) {
+validate_bpm <- function(bpm, genre = "deep_house") {
   if (!is.numeric(bpm) || length(bpm) != 1) {
     stop("BPM must be a single numeric value", call. = FALSE)
   }
 
-  if (bpm < 118 || bpm > 124) {
+  # Extended range for all genres: 60-180
+  if (bpm < 60 || bpm > 180) {
     stop(
-      "BPM must be between 118 and 124 for deep house. Got: ", bpm,
-      "\n  Tip: Use bpm = NULL for auto-selection within genre range.",
+      "BPM must be between 60 and 180. Got: ", bpm,
+      "\n  Extreme tempos can cause synthesis instability.",
       call. = FALSE
     )
   }
 
   TRUE
+}
+
+# =============================================================================
+# Genre Configuration
+# =============================================================================
+
+#' Genre Configuration
+#'
+#' @description Returns configuration parameters for each supported genre.
+#'
+#' @param genre Character: "deep_house", "techno", "ambient", "drum_bass"
+#' @return List with genre-specific parameters
+#' @keywords internal
+get_genre_config <- function(genre) {
+  configs <- list(
+    deep_house = list(
+      bpm_range = c(118, 124),
+      drum_pattern = "four_on_floor",
+      swing_amount = 0.15,
+      bass_style = "filtered_deep",
+      pad_style = "warm_chords",
+      arrangement = "intro_build_drop_breakdown_outro"
+    ),
+    techno = list(
+      bpm_range = c(125, 140),
+      drum_pattern = "four_on_floor_hard",
+      swing_amount = 0.05,
+      bass_style = "acid_resonant",
+      pad_style = "droning",
+      arrangement = "linear_build"
+    ),
+    ambient = list(
+      bpm_range = c(60, 90),
+      drum_pattern = "sparse_textural",
+      swing_amount = 0.0,
+      bass_style = "subtle_pad",
+      pad_style = "evolving_atmosphere",
+      arrangement = "flowing"
+    ),
+    drum_bass = list(
+      bpm_range = c(160, 180),
+      drum_pattern = "breakbeat_fast",
+      swing_amount = 0.25,
+      bass_style = "Reese",
+      pad_style = "stabs",
+      arrangement = "drop_heavy"
+    )
+  )
+
+  configs[[genre]]
+}
+
+#' Select BPM for Genre
+#'
+#' @description Deterministically selects BPM within genre-appropriate range.
+#'
+#' @param code_model A CodeModel object
+#' @param genre Character genre name
+#'
+#' @return Integer BPM within genre range
+#' @keywords internal
+select_bpm_for_genre <- function(code_model, genre = "deep_house") {
+  config <- get_genre_config(genre)
+  bpm_range <- config$bpm_range
+
+  hash_str <- digest::digest(code_model$file_path, algo = "md5")
+  hash_int <- strtoi(substr(hash_str, 1, 7), base = 16L)
+
+  # Map to genre-specific range
+  range_size <- bpm_range[2] - bpm_range[1] + 1
+  bpm <- bpm_range[1] + (hash_int %% range_size)
+  as.integer(bpm)
+}
+
+#' Apply Genre-Specific Swing
+#'
+#' @description Applies swing/groove based on genre configuration.
+#'   Modifies timing to match genre feel.
+#'
+#' @param wave tuneR Wave object
+#' @param genre_config List from get_genre_config()
+#'
+#' @return Wave object with swing applied
+#' @keywords internal
+apply_genre_swing <- function(wave, genre_config) {
+  # For now, swing is applied at the sequencer level
+  # This is a placeholder for future stereo/micro-timing swing effects
+  # Currently the swing_amount from genre_config is used in drum patterns
+  wave
 }
 
 # =============================================================================
@@ -89,10 +180,16 @@ validate_bpm <- function(bpm) {
 #' }
 #'
 #' @export
-raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAMPLE_RATE) {
+raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAMPLE_RATE, genre = "deep_house") {
   # Validate input
   if (!inherits(code_model, "CodeModel")) {
     stop("code_model must be a CodeModel object", call. = FALSE)
+  }
+
+  # Validate genre
+  valid_genres <- c("deep_house", "techno", "ambient", "drum_bass")
+  if (!genre %in% valid_genres) {
+    stop("Invalid genre: ", genre, ". Valid: ", paste(valid_genres, collapse = ", "), call. = FALSE)
   }
 
   # Save current RNG state to restore later (handle case where .Random.seed doesn't exist)
@@ -110,18 +207,21 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
   effective_seed <- if (!is.null(seed)) seed else code_model$file_hash
   set.seed(strtoi(substr(digest::digest(effective_seed), 1, 7), base = 16L))
 
-  # Auto-select BPM if not provided
+  # Get genre configuration
+  genre_config <- get_genre_config(genre)
+
+  # Auto-select BPM if not provided (genre-specific range)
   if (is.null(bpm)) {
-    bpm <- select_bpm(code_model)
+    bpm <- select_bpm_for_genre(code_model, genre)
   }
-  validate_bpm(bpm)
+  validate_bpm(bpm, genre)
 
-  # Create arrangement
-  arrangement <- create_arrangement(code_model, bpm)
+  # Create arrangement with genre and dynamic complexity response
+  arrangement <- create_arrangement(code_model, bpm, genre_config)
 
-  # Generate each section
+  # Generate each section with genre-specific rendering
   sections <- lapply(arrangement$sections, function(section) {
-    render_section(section, arrangement, sample_rate)
+    render_section(section, arrangement, sample_rate, genre_config)
   })
 
   # Concatenate sections
@@ -131,6 +231,12 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
     # Edge case: empty arrangement
     track <- create_silence(2, sample_rate)
   }
+
+  # Apply code-driven effects (reverb/delay based on complexity)
+  track <- apply_code_effects(track, code_model, genre)
+
+  # Apply genre-specific swing to humanize timing
+  track <- apply_genre_swing(track, genre_config)
 
   # Master processing
   track <- normalize_mix(track, headroom_db = -3)

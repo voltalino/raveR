@@ -69,15 +69,19 @@ SECTION_TYPES <- list(
 #'
 #' @description Maps code complexity to track structure. More functions lead
 #'   to more sections, higher complexity leads to longer sections.
+#'   Supports dynamic arrangement changes when complexity changes.
 #'
 #' @param code_model A CodeModel object from raver_analyze()
 #' @param bpm Numeric beats per minute. Default 120.
+#' @param genre_config List from get_genre_config() for genre-specific arrangement
+#' @param previous_model Optional previous CodeModel for detecting complexity changes
 #'
 #' @return List with:
 #'   \itemize{
 #'     \item bpm: Tempo in beats per minute
 #'     \item key: MIDI root note for the track
 #'     \item sections: List of section specs
+#'     \item complexity_change: Direction of complexity change ("up", "down", "same")
 #'     \item total_bars: Total bars in arrangement
 #'     \item motifs: Generated motifs for each function
 #'   }
@@ -97,7 +101,7 @@ SECTION_TYPES <- list(
 #' }
 #'
 #' @export
-create_arrangement <- function(code_model, bpm = 120) {
+create_arrangement <- function(code_model, bpm = 120, genre_config = NULL, previous_model = NULL) {
   # Validate input
   if (!inherits(code_model, "CodeModel")) {
     stop("code_model must be a CodeModel object", call. = FALSE)
@@ -119,8 +123,19 @@ create_arrangement <- function(code_model, bpm = 120) {
   # Calculate complexity factor (0-1)
   complexity <- calculate_complexity_factor(code_model)
 
-  # Build section structure based on complexity
-  sections <- build_sections(complexity, code_model)
+  # Detect complexity change for dynamic arrangement
+  complexity_change <- "same"
+  if (!is.null(previous_model)) {
+    prev_complexity <- calculate_complexity_factor(previous_model)
+    if (complexity > prev_complexity + 0.1) {
+      complexity_change <- "up"
+    } else if (complexity < prev_complexity - 0.1) {
+      complexity_change <- "down"
+    }
+  }
+
+  # Build section structure based on complexity and change direction
+  sections <- build_sections(complexity, code_model, complexity_change, genre_config)
 
   # Calculate total bars
   total_bars <- sum(vapply(sections, function(s) s$bars, integer(1)))
@@ -130,7 +145,8 @@ create_arrangement <- function(code_model, bpm = 120) {
     key = key,
     sections = sections,
     total_bars = total_bars,
-    motifs = motifs
+    motifs = motifs,
+    complexity_change = complexity_change
   )
 }
 
@@ -168,13 +184,23 @@ calculate_complexity_factor <- function(code_model) {
 #'
 #' @return List of section specs
 #' @keywords internal
-build_sections <- function(complexity, code_model) {
+build_sections <- function(complexity, code_model, complexity_change = "same", genre_config = NULL) {
   # Extended structure for longer, more dynamic tracks
-  # Structure: intro -> build -> drop -> breakdown -> build2 -> drop2 -> breakdown2 -> drop3 -> outro
+  # Structure adapts based on complexity change direction
   sections <- list()
 
-  # Intro - atmospheric opening
-  intro_bars <- if (complexity > 0.5) 16L else 8L
+  # Dynamic adjustment factors based on complexity change
+  change_multiplier <- switch(complexity_change,
+    "up" = 1.3,      # Complexity increased = longer sections
+    "down" = 0.7,    # Complexity decreased = shorter, more breakdowns
+    "same" = 1.0     # No change = normal
+  )
+
+  # Intro - atmospheric opening (shorter if complexity dropped)
+  intro_bars <- as.integer(
+    (if (complexity > 0.5) 16L else 8L) *
+    ifelse(complexity_change == "down", 0.5, 1.0)
+  )
   sections$intro <- list(
     type = "intro",
     bars = intro_bars,
@@ -185,7 +211,7 @@ build_sections <- function(complexity, code_model) {
   )
 
   # First Build
-  build_bars <- if (complexity > 0.6) 16L else 8L
+  build_bars <- as.integer(if (complexity > 0.6) 16L else 8L * change_multiplier)
   sections$build <- list(
     type = "build",
     bars = build_bars,
@@ -195,8 +221,11 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$build$filter_end
   )
 
-  # First Drop - main energy
-  drop_bars <- if (complexity > 0.7) 32L else if (complexity > 0.4) 24L else 16L
+  # First Drop - main energy (longer if complexity increased)
+  drop_bars <- as.integer(
+    (if (complexity > 0.7) 32L else if (complexity > 0.4) 24L else 16L) *
+    change_multiplier
+  )
   sections$drop <- list(
     type = "drop",
     bars = drop_bars,
@@ -206,8 +235,11 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$drop$filter_end
   )
 
-  # First Breakdown - tension release
-  breakdown_bars <- if (complexity > 0.7) 16L else 8L
+  # First Breakdown - tension release (longer if complexity dropped)
+  breakdown_bars <- as.integer(
+    (if (complexity > 0.7) 16L else 8L) *
+    ifelse(complexity_change == "down", 1.5, 1.0)
+  )
   sections$breakdown <- list(
     type = "breakdown",
     bars = breakdown_bars,
@@ -217,10 +249,10 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$breakdown$filter_end
   )
 
-  # Second Build - rebuilding energy
+  # Second Build - rebuilding energy (shorter if complexity dropped)
   sections$build2 <- list(
     type = "build",
-    bars = build_bars,
+    bars = as.integer(build_bars * ifelse(complexity_change == "down", 0.8, 1.0)),
     description = "Rebuilding energy after breakdown",
     elements = SECTION_TYPES$build$elements,
     filter_start = 600,
@@ -237,30 +269,32 @@ build_sections <- function(complexity, code_model) {
     filter_end = SECTION_TYPES$drop$filter_end
   )
 
-  # Second Breakdown (shorter) - for complex tracks
-  if (complexity > 0.4) {
+  # Extra breakdown/drop for complex tracks or complexity changes
+  if (complexity > 0.4 || complexity_change != "same") {
     sections$breakdown2 <- list(
       type = "breakdown",
-      bars = breakdown_bars %/% 2L,
+      bars = as.integer(breakdown_bars %/% 2L),
       description = "Brief tension break",
       elements = SECTION_TYPES$breakdown$elements,
       filter_start = 2000,
       filter_end = 1500
     )
 
-    # Third Drop - final climax
-    sections$drop3 <- list(
-      type = "drop",
-      bars = drop_bars,
-      description = "Final climax",
-      elements = SECTION_TYPES$drop$elements,
-      filter_start = SECTION_TYPES$drop$filter_start,
-      filter_end = SECTION_TYPES$drop$filter_end
-    )
+    # Third Drop - final climax (only if complexity increased)
+    if (complexity_change == "up") {
+      sections$drop3 <- list(
+        type = "drop",
+        bars = drop_bars,
+        description = "Final climax",
+        elements = SECTION_TYPES$drop$elements,
+        filter_start = SECTION_TYPES$drop$filter_start,
+        filter_end = SECTION_TYPES$drop$filter_end
+      )
+    }
   }
 
   # Outro - wind down
-  outro_bars <- if (complexity > 0.5) 16L else 8L
+  outro_bars <- as.integer(if (complexity > 0.5) 16L else 8L)
   sections$outro <- list(
     type = "outro",
     bars = outro_bars,

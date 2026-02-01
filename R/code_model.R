@@ -56,22 +56,37 @@ CodeModel <- R6::R6Class(
     #' Initialize CodeModel
     #'
     #' @param file_path Path to the analyzed R script
-
     #' @param features List with function_definitions, function_calls, variable_assignments
     #' @param metrics List with cyclomatic, nesting_depth, control_flow_count
-    initialize = function(file_path, features, metrics) {
+    #' @param minimal_features Optional fallback features from extract_minimal_features()
+    initialize = function(file_path, features, metrics, minimal_features = NULL) {
       self$file_path <- file_path
       self$file_hash <- digest::digest(file = file_path)
 
-      self$functions <- features$function_definitions
-      self$function_calls <- features$function_calls
-      self$variables <- features$variable_assignments
+      # Handle edge case: empty or minimal files
+      if (!is.null(minimal_features) && minimal_features$is_minimal) {
+        # Use minimal fallback features for broken/unparseable files
+        self$functions <- paste0("func_", seq_len(max(minimal_features$function_hints, 1)))
+        self$function_calls <- character()
+        self$variables <- paste0("var_", seq_len(max(minimal_features$line_count %/% 5, 1)))
+        self$cyclomatic_complexity <- as.integer(max(minimal_features$bracket_depth, 1))
+        self$nesting_depth <- as.integer(max(minimal_features$bracket_depth, 1))
+        self$control_flow_count <- as.integer(minimal_features$comment_lines)
+        self$line_count <- as.integer(minimal_features$line_count)
+      } else {
+        # Normal feature extraction
+        self$functions <- features$function_definitions
+        self$function_calls <- features$function_calls
+        self$variables <- features$variable_assignments
+        self$cyclomatic_complexity <- as.integer(metrics$cyclomatic)
+        self$nesting_depth <- as.integer(metrics$nesting_depth)
+        self$control_flow_count <- as.integer(metrics$control_flow_count)
+        self$line_count <- length(readLines(file_path, warn = FALSE))
+      }
 
-      self$cyclomatic_complexity <- as.integer(metrics$cyclomatic)
-      self$nesting_depth <- as.integer(metrics$nesting_depth)
-      self$control_flow_count <- as.integer(metrics$control_flow_count)
-
-      self$line_count <- length(readLines(file_path, warn = FALSE))
+      # Ensure minimum viable values for empty scripts
+      if (length(self$functions) == 0) self$functions <- "main"
+      if (length(self$variables) == 0) self$variables <- "x"
 
       private$calculate_musical_params()
 
