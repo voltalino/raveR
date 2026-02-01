@@ -609,17 +609,17 @@ map_to_pentatonic <- function(motif, penta_scale) {
   # For each note in motif, find nearest pentatonic note
   new_notes <- vapply(motif$notes, function(n) {
     # Find which octave the note is in relative to scale
-    octave_offset <- ((n - penta_scale[1]) %/% 12) * 12
+    octave_offset <- ((n - penta_scale[1]) %/% 12) * 12L
     # Map to scale degree
     note_in_octave <- ((n - penta_scale[1]) %% 12)
     # Find nearest scale degree
     scale_degrees <- (penta_scale - penta_scale[1]) %% 12
     nearest_idx <- which.min(abs(scale_degrees - note_in_octave))
-    # Return mapped note
-    penta_scale[nearest_idx] + octave_offset
+    # Return mapped note as integer
+    as.integer(penta_scale[nearest_idx] + octave_offset)
   }, integer(1))
 
-  motif$notes <- as.integer(new_notes)
+  motif$notes <- new_notes
   motif
 }
 
