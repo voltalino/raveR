@@ -481,6 +481,7 @@ generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_
 #' Generate lead melody for a section
 #'
 #' @description Internal helper that creates lead melodies using function motifs.
+#'   Varies the lead character based on section type for musical interest.
 #'
 #' @param arrangement Full arrangement object
 #' @param section Section spec
@@ -492,21 +493,93 @@ generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_
 generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPLE_RATE) {
   bpm <- arrangement$bpm
   motifs <- arrangement$motifs
+  section_type <- section$type
 
   # Need at least one motif for lead
- if (length(motifs) == 0) {
+  if (length(motifs) == 0) {
     return(NULL)
   }
 
-  # Use first motif for main lead
-  main_motif <- motifs[[1]]
+  # Section-specific lead parameters
+  lead_config <- switch(section_type,
+    "intro" = list(
+      motif_idx = 1,
+      octave_shift = 12,  # Higher, ethereal
+      velocity = 0.4,
+      evolution = 0.3,
+      sparseness = 0.5,   # Only play 50% of notes
+      add_second = FALSE
+    ),
+    "build" = list(
+      motif_idx = 1,
+      octave_shift = 0,
+      velocity = 0.55,
+      evolution = 0.15,
+      sparseness = 0.7,   # Building up
+      add_second = FALSE
+    ),
+    "drop" = list(
+      motif_idx = 1,
+      octave_shift = 0,
+      velocity = 0.7,
+      evolution = 0.0,    # Original motif, full energy
+      sparseness = 1.0,   # All notes
+      add_second = TRUE
+    ),
+    "breakdown" = list(
+      motif_idx = if (length(motifs) >= 2) 2 else 1,  # Use different motif
+      octave_shift = 12,  # Higher, atmospheric
+      velocity = 0.5,
+      evolution = 0.4,    # More variation
+      sparseness = 0.4,   # Sparse, breathing room
+      add_second = FALSE
+    ),
+    "outro" = list(
+      motif_idx = 1,
+      octave_shift = 12,
+      velocity = 0.35,
+      evolution = 0.5,
+      sparseness = 0.3,   # Very sparse, fading
+      add_second = FALSE
+    ),
+    # Default (drop-like)
+    list(
+      motif_idx = 1,
+      octave_shift = 0,
+      velocity = 0.6,
+      evolution = 0.0,
+      sparseness = 1.0,
+      add_second = length(motifs) >= 2
+    )
+  )
 
-  # Generate lead melody
-  lead_wave <- raver_lead_melody(main_motif, bpm, bars, velocity = 0.6)
+  # Select and prepare motif
+  motif_idx <- min(lead_config$motif_idx, length(motifs))
+  base_motif <- motifs[[motif_idx]]
 
-  # If multiple motifs, layer a second lead (quieter, evolved)
-  if (length(motifs) >= 2) {
-    second_motif <- evolve_motif(motifs[[2]], variation = 0.2)
+  # Evolve motif if needed
+  if (lead_config$evolution > 0) {
+    base_motif <- evolve_motif(base_motif, variation = lead_config$evolution)
+  }
+
+  # Apply octave shift
+  if (lead_config$octave_shift != 0) {
+    base_motif$notes <- base_motif$notes + lead_config$octave_shift
+  }
+
+  # Apply sparseness (randomly mute some notes)
+  if (lead_config$sparseness < 1.0) {
+    base_motif <- sparse_motif(base_motif, lead_config$sparseness)
+  }
+
+  # Generate main lead
+  lead_wave <- raver_lead_melody(base_motif, bpm, bars, velocity = lead_config$velocity)
+
+  # Add second lead layer for drops (countermelody)
+  if (lead_config$add_second && length(motifs) >= 2) {
+    second_motif <- evolve_motif(motifs[[2]], variation = 0.25)
+    # Offset second motif by an octave for separation
+    second_motif$notes <- second_motif$notes + 7  # Fifth up for harmony
     second_lead <- raver_lead_melody(second_motif, bpm, bars, velocity = 0.35)
 
     # Mix leads
@@ -525,6 +598,54 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
   }
 
   lead_wave
+}
+
+#' Make a motif sparser by randomly removing notes
+#'
+#' @description Internal helper that removes notes from a motif based on
+#'   a probability factor, creating sparser patterns.
+#'
+#' @param motif A motif from generate_motif()
+#' @param keep_probability Probability (0-1) of keeping each note
+#'
+#' @return A modified motif with fewer active notes
+#' @keywords internal
+sparse_motif <- function(motif, keep_probability) {
+  # Ensure at least one note remains
+  active_indices <- which(motif$rhythm)
+  if (length(active_indices) <= 1) return(motif)
+
+  # Randomly decide which notes to keep
+  keep <- runif(length(active_indices)) < keep_probability
+
+  # Always keep at least one note (the first one)
+  if (!any(keep)) keep[1] <- TRUE
+
+  # Update rhythm
+  new_rhythm <- motif$rhythm
+  remove_indices <- active_indices[!keep]
+  new_rhythm[remove_indices] <- FALSE
+
+  # Adjust notes and velocities arrays
+  kept_count <- sum(keep)
+  new_notes <- motif$notes[keep[seq_len(min(length(keep), length(motif$notes)))]]
+  new_velocities <- motif$velocities[keep[seq_len(min(length(keep), length(motif$velocities)))]]
+
+  # Ensure we have enough notes/velocities
+  if (length(new_notes) < kept_count) {
+    new_notes <- rep(new_notes, length.out = kept_count)
+  }
+  if (length(new_velocities) < kept_count) {
+    new_velocities <- rep(new_velocities, length.out = kept_count)
+  }
+
+  list(
+    name = motif$name,
+    rhythm = new_rhythm,
+    notes = as.integer(new_notes),
+    velocities = as.numeric(new_velocities),
+    seed = paste0(motif$seed, "_sparse")
+  )
 }
 
 #' Reset RNG state
