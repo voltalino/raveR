@@ -1,0 +1,26 @@
+Package: raveR
+Title: R Scripts to Deep House Music
+Version: 0.1.0
+Authors@R:
+    person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: Transform R scripts into listenable deep house music. RaveR provides
+    waveform synthesis, pre-rendered buffer architecture for GC-pause-free
+    playback, and audio export capabilities.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    tuneR,
+    audio,
+    av,
+    cyclocomp,
+    digest,
+    later,
+    R6,
+    watcher
+Suggests:
+    testthat (>= 3.0.0),
+    seewave
+Config/testthat/edition: 3
+SystemRequirements: FFmpeg (for MP3 export)

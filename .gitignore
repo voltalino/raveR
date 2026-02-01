@@ -1,0 +1,29 @@
+# R package build artifacts
+*.Rcheck/
+*.tar.gz
+*.Rproj.user
+
+# Planning and development docs
+.planning/
+
+# Generated audio files (keep inst/samples/)
+/*.wav
+
+# OS files
+.DS_Store
+**/.DS_Store
+
+# R session files
+.Rhistory
+**/.Rhistory
+.RData
+.Ruserdata
+
+# IDE
+.Rproj.user/
+*.Rproj
+
+# Temporary files
+*~
+\#*\#
+.#*
