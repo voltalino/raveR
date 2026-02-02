@@ -5,6 +5,7 @@
 ## Test environments
 
 * local macOS Sequoia 15.7.3, R 4.5.2
+* win-builder (R-devel)
 
 ## Notes
 
