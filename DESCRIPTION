@@ -22,7 +22,6 @@ Imports:
     R6,
     watcher
 Suggests:
-    testthat (>= 3.0.0),
-    seewave
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 SystemRequirements: FFmpeg (for MP3 export)
