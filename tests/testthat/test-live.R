@@ -290,6 +290,8 @@ changed <- function() { 42 }
 # =============================================================================
 
 test_that("start sets is_playing to TRUE", {
+  skip_if_no_audio()
+
   script <- create_test_script()
   on.exit({
     pc$stop()
@@ -307,6 +309,8 @@ test_that("start sets is_playing to TRUE", {
 })
 
 test_that("stop sets is_playing to FALSE", {
+  skip_if_no_audio()
+
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -320,6 +324,8 @@ test_that("stop sets is_playing to FALSE", {
 })
 
 test_that("stop is idempotent (can call multiple times)", {
+  skip_if_no_audio()
+
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -334,6 +340,8 @@ test_that("stop is idempotent (can call multiple times)", {
 })
 
 test_that("start is idempotent when already playing", {
+  skip_if_no_audio()
+
   script <- create_test_script()
   on.exit({
     pc$stop()
@@ -353,6 +361,8 @@ test_that("start is idempotent when already playing", {
 })
 
 test_that("start resets current_bar to 0", {
+  skip_if_no_audio()
+
   script <- create_test_script()
   on.exit({
     pc$stop()

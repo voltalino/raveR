@@ -203,6 +203,8 @@ test_that("stopR doesn't error when no playback active", {
 })
 
 test_that("playR creates controller in .live_env", {
+  skip_if_no_audio()
+
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   on.exit({
@@ -233,6 +235,8 @@ test_that("playR creates controller in .live_env", {
 })
 
 test_that("stopR clears controller from .live_env", {
+  skip_if_no_audio()
+
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   on.exit({
@@ -258,6 +262,8 @@ test_that("stopR clears controller from .live_env", {
 })
 
 test_that("playR stops previous playback before starting new", {
+  skip_if_no_audio()
+
   # Create two test scripts
   script_file1 <- tempfile(fileext = ".R")
   script_file2 <- tempfile(fileext = ".R")
@@ -291,6 +297,8 @@ test_that("playR stops previous playback before starting new", {
 })
 
 test_that("playR accepts custom bpm parameter", {
+  skip_if_no_audio()
+
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   on.exit({
