@@ -19,8 +19,8 @@ DEFAULT_MIX_LEVELS <- list(
   kick = 0.9,
   snare = 0.7,
   clap = 0.6,
-  hihat_closed = 0.4,
-  hihat_open = 0.5,
+  hihat_closed = 0.3,
+  hihat_open = 0.35,
   bass = 0.8,
   pad = 0.95,
   lead = 0.6

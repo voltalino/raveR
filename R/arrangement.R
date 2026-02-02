@@ -544,7 +544,9 @@ create_section_patterns <- function(elements, arrangement) {
   clap_steps <- c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
                   FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE)
 
-  hihat_steps <- rep(TRUE, 16)
+  # Offbeat 8th note hihats (default pattern for most sections)
+  hihat_steps <- c(FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE,
+                   FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE)
 
   hihat_open_steps <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,
                         FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE)
@@ -554,8 +556,8 @@ create_section_patterns <- function(elements, arrangement) {
       kick = create_pattern("kick", kick_steps),
       snare = create_pattern("snare", snare_steps),
       clap = create_pattern("clap", clap_steps, velocity = 0.85),
-      hihat_closed = create_pattern("hihat_closed", hihat_steps, swing = 0.08, velocity = 0.35),
-      hihat_open = create_pattern("hihat_open", hihat_open_steps, velocity = 0.4),
+      hihat_closed = create_pattern("hihat_closed", hihat_steps, swing = 0.08, velocity = 0.25),
+      hihat_open = create_pattern("hihat_open", hihat_open_steps, velocity = 0.35),
       NULL
     )
 

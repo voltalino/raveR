@@ -375,28 +375,33 @@ generate_drum_patterns <- function(section, bpm, density) {
     patterns$clap <- create_pattern("clap", clap_steps, velocity = 0.8)
   }
 
-  # Hi-hats - density affects pattern
+  # Hi-hats - section type determines pattern
+  # Build sections get denser patterns, others get offbeat 8ths only
   if ("hihat_closed" %in% elements) {
-    if (density > 0.7) {
-      # Full 16th note hats for high density
+    section_type <- section$type
+    is_build <- identical(section_type, "build")
+
+    if (is_build && density > 0.6) {
+      # Full 16th note hats for builds with high density
       hihat_steps <- rep(TRUE, 16)
-    } else if (density > 0.4) {
-      # 8th note hats for medium density
+    } else if (is_build && density > 0.3) {
+      # 8th note hats for builds with medium density
       hihat_steps <- c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE,
                        TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE)
     } else {
-      # Offbeat 8ths for low density
+      # Offbeat 8ths for all other sections (intro, drop, breakdown, outro)
       hihat_steps <- c(FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE,
                        FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE)
     }
-    patterns$hihat_closed <- create_pattern("hihat_closed", hihat_steps, swing = 0.08)
+    # Reduced velocity for quieter hihats
+    patterns$hihat_closed <- create_pattern("hihat_closed", hihat_steps, swing = 0.08, velocity = 0.3)
   }
 
-  # Open hi-hat for accents
+  # Open hi-hat for accents (quieter)
   if ("hihat_open" %in% elements) {
     hihat_open_steps <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,
                           FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE)
-    patterns$hihat_open <- create_pattern("hihat_open", hihat_open_steps, velocity = 0.7)
+    patterns$hihat_open <- create_pattern("hihat_open", hihat_open_steps, velocity = 0.5)
   }
 
   patterns
