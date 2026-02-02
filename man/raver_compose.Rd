@@ -4,7 +4,13 @@
 \alias{raver_compose}
 \title{Compose a complete track from code analysis}
 \usage{
-raver_compose(code_model, bpm = NULL, seed = NULL, sample_rate = SAMPLE_RATE)
+raver_compose(
+  code_model,
+  bpm = NULL,
+  seed = NULL,
+  sample_rate = SAMPLE_RATE,
+  genre = "deep_house"
+)
 }
 \arguments{
 \item{code_model}{CodeModel object from raver_analyze()}
@@ -16,6 +22,9 @@ raver_compose(code_model, bpm = NULL, seed = NULL, sample_rate = SAMPLE_RATE)
 for determinism. Default NULL.}
 
 \item{sample_rate}{Integer sample rate in Hz. Default SAMPLE_RATE.}
+
+\item{genre}{Character genre name. One of "deep_house", "techno", "ambient",
+"drum_bass", or "house". Default "deep_house".}
 }
 \value{
 A Wave object containing the complete track

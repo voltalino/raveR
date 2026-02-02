@@ -13,7 +13,7 @@ mix_tracks(tracks, levels = DEFAULT_MIX_LEVELS)
 track names. Default uses DEFAULT_MIX_LEVELS.}
 }
 \value{
-Combined Wave object. Note: output may exceed \link{-1,1} range if
+Combined Wave object. Note: output may exceed the -1 to 1 range if
 tracks are loud. Use normalize_mix() after mixing.
 }
 \description{

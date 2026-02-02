@@ -73,16 +73,16 @@ test_that("PlaybackController validates BPM range", {
   script <- create_test_script()
   on.exit(unlink(script))
 
-  # BPM too low
+  # BPM too low (below 60)
   expect_error(
-    PlaybackController$new(script, bpm = 100),
-    "BPM must be between 118 and 124"
+    PlaybackController$new(script, bpm = 50),
+    "BPM must be between 60 and 180"
   )
 
-  # BPM too high
+  # BPM too high (above 180)
   expect_error(
-    PlaybackController$new(script, bpm = 140),
-    "BPM must be between 118 and 124"
+    PlaybackController$new(script, bpm = 200),
+    "BPM must be between 60 and 180"
   )
 })
 
@@ -451,7 +451,8 @@ test_that("on_file_change sets has_parse_error on parse failure", {
   })
 
   expect_true(pc$has_parse_error)
-  expect_true(pc$pending_transition)
+  # On parse error, we keep old model - no transition queued
+  expect_false(pc$pending_transition)
 })
 
 test_that("on_file_change sets pending_transition on valid change", {

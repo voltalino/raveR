@@ -4,12 +4,15 @@
 \alias{playR}
 \title{Start Live Playback}
 \usage{
-playR(script_path, bpm = NULL)
+playR(script_path, bpm = NULL, genre = "deep_house")
 }
 \arguments{
 \item{script_path}{Path to the R script to sonify}
 
-\item{bpm}{Numeric tempo (118-124). If NULL, auto-selects based on file.}
+\item{bpm}{Numeric tempo (60-180). If NULL, auto-selects based on file and genre.}
+
+\item{genre}{Character genre name. One of "deep_house", "techno", "ambient",
+"drum_bass", or "house". Default "deep_house".}
 }
 \value{
 NULL invisibly. Use stopR() to stop playback.

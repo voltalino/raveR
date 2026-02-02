@@ -5,7 +5,7 @@
 \alias{SCALE_PATTERNS}
 \title{Scale interval patterns (semitones from root)}
 \format{
-An object of class \code{list} of length 4.
+An object of class \code{list} of length 6.
 }
 \usage{
 SCALE_PATTERNS

@@ -57,16 +57,16 @@ test_that("invalid BPM throws clear error", {
 
   model <- raver_analyze(temp_file)
 
-  # BPM too low
+  # BPM too low (below 60)
   expect_error(
-    raver_compose_section(model, "intro", bpm = 100),
-    "BPM must be between 118 and 124"
+    raver_compose_section(model, "intro", bpm = 50),
+    "BPM must be between 60 and 180"
   )
 
-  # BPM too high
+  # BPM too high (above 180)
   expect_error(
-    raver_compose_section(model, "intro", bpm = 140),
-    "BPM must be between 118 and 124"
+    raver_compose_section(model, "intro", bpm = 200),
+    "BPM must be between 60 and 180"
   )
 
   # Invalid BPM type

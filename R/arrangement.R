@@ -181,6 +181,8 @@ calculate_complexity_factor <- function(code_model) {
 #'
 #' @param complexity Numeric complexity factor (0-1)
 #' @param code_model A CodeModel object
+#' @param complexity_change Direction of complexity change ("up", "down", "same")
+#' @param genre_config Genre configuration list (optional)
 #'
 #' @return List of section specs
 #' @keywords internal

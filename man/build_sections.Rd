@@ -4,12 +4,21 @@
 \alias{build_sections}
 \title{Build section structure based on complexity}
 \usage{
-build_sections(complexity, code_model)
+build_sections(
+  complexity,
+  code_model,
+  complexity_change = "same",
+  genre_config = NULL
+)
 }
 \arguments{
 \item{complexity}{Numeric complexity factor (0-1)}
 
 \item{code_model}{A CodeModel object}
+
+\item{complexity_change}{Direction of complexity change ("up", "down", "same")}
+
+\item{genre_config}{Genre configuration list (optional)}
 }
 \value{
 List of section specs

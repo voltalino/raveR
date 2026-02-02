@@ -76,7 +76,7 @@ pad_to_length <- function(wave, target_samples) {
 #' @param levels Named list of level multipliers (0-1). Names should match
 #'   track names. Default uses DEFAULT_MIX_LEVELS.
 #'
-#' @return Combined Wave object. Note: output may exceed [-1,1] range if
+#' @return Combined Wave object. Note: output may exceed the -1 to 1 range if
 #'   tracks are loud. Use normalize_mix() after mixing.
 #'
 #' @details

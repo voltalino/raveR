@@ -17,10 +17,11 @@ NULL
 #' @param output_path Path for the output audio file. Format is detected from
 #'   extension (.wav or .mp3)
 #' @param bpm Numeric tempo (60-180 BPM). If NULL, auto-selects based on file hash within
-#'   118-124 range (default NULL)
-#' @param genre Character: "deep_house", "techno", "ambient", or "drum_bass" (default: "deep_house")
+#'   genre-specific range (default NULL)
 #' @param seed Random seed for reproducibility. If NULL, uses file hash for
 #'   determinism (default NULL)
+#' @param genre Character: "deep_house", "techno", "ambient", "drum_bass", or "house"
+#'   (default: "deep_house")
 #'
 #' @return The output_path invisibly on success
 #' @export
@@ -155,7 +156,9 @@ detect_output_format <- function(output_path) {
 #' smoothly to reflect the new code.
 #'
 #' @param script_path Path to the R script to sonify
-#' @param bpm Numeric tempo (118-124). If NULL, auto-selects based on file.
+#' @param bpm Numeric tempo (60-180). If NULL, auto-selects based on file and genre.
+#' @param genre Character genre name. One of "deep_house", "techno", "ambient",
+#'   "drum_bass", or "house". Default "deep_house".
 #'
 #' @return NULL invisibly. Use stopR() to stop playback.
 #' @export

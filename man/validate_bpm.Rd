@@ -4,15 +4,17 @@
 \alias{validate_bpm}
 \title{Validate BPM value}
 \usage{
-validate_bpm(bpm)
+validate_bpm(bpm, genre = "deep_house")
 }
 \arguments{
 \item{bpm}{Numeric BPM value to validate}
+
+\item{genre}{Character genre for context}
 }
 \value{
 TRUE if valid, stops with error if invalid
 }
 \description{
-Validates that BPM is within the acceptable 118-124 range.
+Validates that BPM is within acceptable range (60-180).
 }
 \keyword{internal}

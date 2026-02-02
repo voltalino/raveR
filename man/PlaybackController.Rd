@@ -39,7 +39,13 @@ Key features:
 
 \item{\code{last_known_good_model}}{Last successfully parsed CodeModel for fallback}
 
-\item{\code{has_parse_error}}{Whether the current script has a parse error
+\item{\code{has_parse_error}}{Whether the current script has a parse error}
+
+\item{\code{genre}}{Music genre for playback}
+
+\item{\code{max_buffer_seconds}}{Maximum buffer size to prevent memory leaks}
+
+\item{\code{buffer_history}}{Ring buffer of recent audio buffers (for memory management)
 Initialize PlaybackController}
 
 \item{\code{buffer_queue}}{List of pre-rendered Wave objects awaiting playback}
@@ -58,8 +64,14 @@ Initialize PlaybackController}
 
 \item{\code{current_buffer}}{Current playing buffer for seamless re-looping}
 
-\item{\code{next_buffer}}{Pre-generated buffer for after transition
-Apply fade in/out to buffer for smooth transitions}
+\item{\code{next_buffer}}{Pre-generated buffer for after transition}
+
+\item{\code{section_cycle}}{Section types to cycle through for variety}
+
+\item{\code{current_section_idx}}{Current position in section cycle
+Manage buffer memory (prevent leaks)
+
+Adds buffer to history and prunes old buffers to stay under max_buffer_seconds}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,8 +94,14 @@ Apply fade in/out to buffer for smooth transitions}
 
 \item{\code{current_buffer}}{Current playing buffer for seamless re-looping}
 
-\item{\code{next_buffer}}{Pre-generated buffer for after transition
-Apply fade in/out to buffer for smooth transitions}
+\item{\code{next_buffer}}{Pre-generated buffer for after transition}
+
+\item{\code{section_cycle}}{Section types to cycle through for variety}
+
+\item{\code{current_section_idx}}{Current position in section cycle
+Manage buffer memory (prevent leaks)
+
+Adds buffer to history and prunes old buffers to stay under max_buffer_seconds}
 }
 \if{html}{\out{</div>}}
 }
@@ -108,7 +126,12 @@ Apply fade in/out to buffer for smooth transitions}
 \if{latex}{\out{\hypertarget{method-PlaybackController-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlaybackController$new(script_path, bpm = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PlaybackController$new(
+  script_path,
+  bpm = NULL,
+  genre = "deep_house",
+  max_buffer_seconds = 300
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -116,7 +139,11 @@ Apply fade in/out to buffer for smooth transitions}
 \describe{
 \item{\code{script_path}}{Path to the R script to play}
 
-\item{\code{bpm}}{Optional BPM (118-124). If NULL, auto-selects based on script hash.}
+\item{\code{bpm}}{Optional BPM (60-180). If NULL, auto-selects based on script hash.}
+
+\item{\code{genre}}{Optional genre (deep_house, techno, ambient, drum_bass)}
+
+\item{\code{max_buffer_seconds}}{Maximum total buffer seconds to keep in memory}
 }
 \if{html}{\out{</div>}}
 }

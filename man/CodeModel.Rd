@@ -53,7 +53,7 @@ Initialize CodeModel}
 \if{latex}{\out{\hypertarget{method-CodeModel-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeModel$new(file_path, features, metrics)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CodeModel$new(file_path, features, metrics, minimal_features = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,7 +63,9 @@ Initialize CodeModel}
 
 \item{\code{features}}{List with function_definitions, function_calls, variable_assignments}
 
-\item{\code{metrics}}{List with cyclomatic, nesting_depth, control_flow_count
+\item{\code{metrics}}{List with cyclomatic, nesting_depth, control_flow_count}
+
+\item{\code{minimal_features}}{Optional fallback features from extract_minimal_features()
 Check if Same File
 
 Compare file hashes to detect if the underlying file has changed.

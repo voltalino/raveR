@@ -2,7 +2,7 @@
 #' @description The main composition engine that generates complete deep house
 #'   tracks from code analysis. Integrates music theory, instruments, sequencer,
 #'   motifs, and arrangement components.
-#' @name composer
+#' @name composition-engine
 NULL
 
 # =============================================================================
@@ -160,6 +160,8 @@ apply_genre_swing <- function(wave, genre_config) {
 #' @param seed Random seed for reproducibility. If NULL, uses file_hash
 #'   for determinism. Default NULL.
 #' @param sample_rate Integer sample rate in Hz. Default SAMPLE_RATE.
+#' @param genre Character genre name. One of "deep_house", "techno", "ambient",
+#'   "drum_bass", or "house". Default "deep_house".
 #'
 #' @return A Wave object containing the complete track
 #'
@@ -221,7 +223,7 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
 
   # Generate each section with genre-specific rendering
   sections <- lapply(arrangement$sections, function(section) {
-    render_section(section, arrangement, sample_rate, genre_config)
+    render_section(section, arrangement, sample_rate)
   })
 
   # Concatenate sections

@@ -2,6 +2,11 @@
 #' @description Parse R scripts to extract structural information including
 #'   function definitions, function calls, and variable assignments.
 #' @name analysis
+#' @importFrom utils getParseData
+#' @importFrom stats runif
+#' @import R6
+#' @import later
+#' @import watcher
 NULL
 
 #' Safe Parse R Script

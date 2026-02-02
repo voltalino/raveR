@@ -19,6 +19,10 @@ generate_lead_melody(arrangement, section, bars, sample_rate = SAMPLE_RATE)
 A Wave object with lead melody, or NULL if no motifs
 }
 \description{
-Internal helper that creates lead melodies using function motifs.
+Internal helper that creates lead melodies from function motifs.
+Each function's motif provides a unique rhythm and note pattern derived from
+its name. Different sections transform these rhythms in distinct ways.
+Uses pentatonic scale for pleasant melodic content.
+Includes two lead voices: main melodic lead and percussive pluck with delay.
 }
 \keyword{internal}

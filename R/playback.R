@@ -28,7 +28,7 @@ NULL
 #'   \item Linux: PortAudio - experimental, may require setup
 #' }
 #'
-#' The Wave object is normalized to [-1, 1] range for the audio package.
+#' The Wave object is normalized to the -1 to 1 range for the audio package.
 #' For 32-bit float input, this involves scaling by the max absolute value.
 #' For 16-bit PCM input, this scales by 32768.
 #'
@@ -162,7 +162,7 @@ stop_audio <- function() {
 
   if (!is.null(instance)) {
     tryCatch({
-      audio::close(instance)
+      close(instance)
     }, error = function(e) {
       # Silently ignore errors (e.g., if already stopped)
     })

@@ -255,15 +255,15 @@ test_that("bpm parameter works (118-124 range enforced)", {
     expect_equal(actual_duration, expected_bar_duration, tolerance = 0.01)
   }
 
-  # Invalid BPM values should error
+  # Invalid BPM values should error (now 60-180 range for multi-genre support)
   expect_error(
-    raver_compose_section(model, "intro", bpm = 100),
-    "BPM must be between 118 and 124"
+    raver_compose_section(model, "intro", bpm = 50),
+    "BPM must be between 60 and 180"
   )
 
   expect_error(
-    raver_compose_section(model, "intro", bpm = 140),
-    "BPM must be between 118 and 124"
+    raver_compose_section(model, "intro", bpm = 200),
+    "BPM must be between 60 and 180"
   )
 })
 

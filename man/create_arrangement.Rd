@@ -4,12 +4,21 @@
 \alias{create_arrangement}
 \title{Create a track arrangement from code model}
 \usage{
-create_arrangement(code_model, bpm = 120)
+create_arrangement(
+  code_model,
+  bpm = 120,
+  genre_config = NULL,
+  previous_model = NULL
+)
 }
 \arguments{
 \item{code_model}{A CodeModel object from raver_analyze()}
 
 \item{bpm}{Numeric beats per minute. Default 120.}
+
+\item{genre_config}{List from get_genre_config() for genre-specific arrangement}
+
+\item{previous_model}{Optional previous CodeModel for detecting complexity changes}
 }
 \value{
 List with:
@@ -17,6 +26,7 @@ List with:
 \item bpm: Tempo in beats per minute
 \item key: MIDI root note for the track
 \item sections: List of section specs
+\item complexity_change: Direction of complexity change ("up", "down", "same")
 \item total_bars: Total bars in arrangement
 \item motifs: Generated motifs for each function
 }
@@ -24,6 +34,7 @@ List with:
 \description{
 Maps code complexity to track structure. More functions lead
 to more sections, higher complexity leads to longer sections.
+Supports dynamic arrangement changes when complexity changes.
 }
 \details{
 The arrangement maps code characteristics to musical structure:
