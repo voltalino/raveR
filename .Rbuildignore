@@ -1,0 +1,13 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.DS_Store$
+^\.git$
+^\.gitignore$
+^LICENSE\.md$
+^README\.Rmd$
+^cran-comments\.md$
+^NEWS\.md$
+^\.github$
+^raveR\.Rcheck$
+^raveR_.*\.tar\.gz$
+^deep_house_demo\.wav$
