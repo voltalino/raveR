@@ -194,18 +194,7 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
     stop("Invalid genre: ", genre, ". Valid: ", paste(valid_genres, collapse = ", "), call. = FALSE)
   }
 
-  # Save current RNG state to restore later (handle case where .Random.seed doesn't exist)
-  has_old_seed <- exists(".Random.seed", envir = globalenv())
-  if (has_old_seed) {
-    old_seed <- get(".Random.seed", envir = globalenv())
-  }
-  on.exit({
-    if (has_old_seed) {
-      assign(".Random.seed", old_seed, envir = globalenv())
-    }
-  }, add = TRUE)
-
-  # Set seed for determinism
+  # Set seed for determinism (affects global RNG state)
   effective_seed <- if (!is.null(seed)) seed else code_model$file_hash
   set.seed(strtoi(substr(digest::digest(effective_seed), 1, 7), base = 16L))
 
@@ -292,18 +281,7 @@ raver_compose_section <- function(code_model, section_type, bpm = 120,
 
   validate_bpm(bpm)
 
-  # Save and restore RNG state (handle case where .Random.seed doesn't exist)
-  has_old_seed <- exists(".Random.seed", envir = globalenv())
-  if (has_old_seed) {
-    old_seed <- get(".Random.seed", envir = globalenv())
-  }
-  on.exit({
-    if (has_old_seed) {
-      assign(".Random.seed", old_seed, envir = globalenv())
-    }
-  }, add = TRUE)
-
-  # Set seed based on file hash for consistency
+  # Set seed based on file hash for consistency (affects global RNG state)
   set.seed(strtoi(substr(digest::digest(code_model$file_hash), 1, 7), base = 16L))
 
   # Create arrangement for context

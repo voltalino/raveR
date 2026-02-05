@@ -55,24 +55,9 @@ generate_glitch_effect <- function(wave, intensity = 0.5, seed = NULL) {
     stop("intensity must be a single numeric value between 0 and 1", call. = FALSE)
   }
 
-  # Save and restore RNG state
-  has_old_seed <- exists(".Random.seed", envir = globalenv())
-  if (has_old_seed) {
-    old_seed <- get(".Random.seed", envir = globalenv())
-  }
-  on.exit({
-    if (has_old_seed) {
-      assign(".Random.seed", old_seed, envir = globalenv())
-    }
-  }, add = TRUE)
-
-  # Set seed for reproducibility
+  # Set seed for reproducibility (affects global RNG state)
   if (!is.null(seed)) {
     set.seed(seed)
-  } else {
-    # Use wave characteristics for deterministic seeding
-    wave_hash <- sum(abs(wave@left[seq(1, min(1000, length(wave@left)), by = 10)]))
-    set.seed(as.integer(wave_hash * 1000) %% .Machine$integer.max)
   }
 
   result <- wave

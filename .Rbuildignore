@@ -10,3 +10,4 @@
 ^raveR\.Rcheck$
 ^raveR_.*\.tar\.gz$
 ^deep_house_demo\.wav$
+^CRAN-SUBMISSION$
