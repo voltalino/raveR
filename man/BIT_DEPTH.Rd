@@ -13,4 +13,9 @@ BIT_DEPTH
 \description{
 Internal processing bit depth (32-bit float)
 }
+\examples{
+# Check the internal bit depth
+BIT_DEPTH
+
+}
 \keyword{datasets}

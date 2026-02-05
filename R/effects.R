@@ -193,6 +193,15 @@ apply_delay <- function(wave, delay_params) {
 #' @param genre Character genre
 #'
 #' @return Wave object with effects applied
+#'
+#' @examples
+#' \dontrun{
+#' # Analyze a script and apply effects to audio
+#' model <- raver_analyze("my_script.R")
+#' tone <- raver_sine(440, 2)
+#' processed <- apply_code_effects(tone, model, "deep_house")
+#' }
+#'
 #' @export
 apply_code_effects <- function(wave, code_model, genre = "deep_house") {
   # Calculate effect parameters from code metrics

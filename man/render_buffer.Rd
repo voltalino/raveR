@@ -33,3 +33,16 @@ By rendering complete buffers (typically 4-8 seconds, or 1-4 bars
 at 120 BPM) before playback begins, we ensure smooth audio output.
 The content_fn is called once to generate the buffer content.
 }
+\examples{
+\dontrun{
+# Pre-render a 4-second buffer with a 440 Hz sine wave
+buffer <- render_buffer(4, function() raver_sine(440, 4))
+
+# Pre-render with multiple sounds
+buffer <- render_buffer(2, function() {
+  sine <- raver_sine(440, 1)
+  square <- raver_square(220, 1)
+  bind_waves(sine, square)
+})
+}
+}

@@ -69,7 +69,7 @@ create_silence <- function(duration_sec, sample_rate = SAMPLE_RATE) {
 #' The content_fn is called once to generate the buffer content.
 #'
 #' @examples
-#' \dontrun
+#' \dontrun{
 #' # Pre-render a 4-second buffer with a 440 Hz sine wave
 #' buffer <- render_buffer(4, function() raver_sine(440, 4))
 #'

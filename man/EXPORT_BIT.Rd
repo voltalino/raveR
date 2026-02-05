@@ -13,4 +13,9 @@ EXPORT_BIT
 \description{
 Export bit depth (16-bit for CD quality WAV export)
 }
+\examples{
+# Check export bit depth
+EXPORT_BIT
+
+}
 \keyword{datasets}

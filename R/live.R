@@ -25,6 +25,15 @@ NULL
 #'   \item Pending transition flag for smooth phrase-boundary changes
 #' }
 #'
+#' @examples
+#' \dontrun{
+#' # Create controller for a script
+#' ctrl <- PlaybackController$new("my_script.R", bpm = 120)
+#' ctrl$start()
+#' # Edit my_script.R - music will transition smoothly
+#' ctrl$stop()
+#' }
+#'
 #' @export
 PlaybackController <- R6::R6Class(
   "PlaybackController",

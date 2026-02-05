@@ -20,3 +20,12 @@ Wave object with effects applied
 Main entry point for applying code-driven effects to
 a generated audio section.
 }
+\examples{
+\dontrun{
+# Analyze a script and apply effects to audio
+model <- raver_analyze("my_script.R")
+tone <- raver_sine(440, 2)
+processed <- apply_code_effects(tone, model, "deep_house")
+}
+
+}

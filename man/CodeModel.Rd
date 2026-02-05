@@ -9,6 +9,16 @@ Contains extracted features (functions, variables, calls), file metadata
 (path, hash, line count), and computed musical parameters (part count,
 instrument count, density level).
 }
+\examples{
+\dontrun{
+# CodeModel is typically created via raver_analyze()
+model <- raver_analyze("my_script.R")
+model$functions
+model$cyclomatic_complexity
+model$summary()
+}
+
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{

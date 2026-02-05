@@ -22,6 +22,16 @@ Key features:
 \item Pending transition flag for smooth phrase-boundary changes
 }
 }
+\examples{
+\dontrun{
+# Create controller for a script
+ctrl <- PlaybackController$new("my_script.R", bpm = 120)
+ctrl$start()
+# Edit my_script.R - music will transition smoothly
+ctrl$stop()
+}
+
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{

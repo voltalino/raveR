@@ -12,6 +12,15 @@ NULL
 #' (path, hash, line count), and computed musical parameters (part count,
 #' instrument count, density level).
 #'
+#' @examples
+#' \dontrun{
+#' # CodeModel is typically created via raver_analyze()
+#' model <- raver_analyze("my_script.R")
+#' model$functions
+#' model$cyclomatic_complexity
+#' model$summary()
+#' }
+#'
 #' @export
 CodeModel <- R6::R6Class(
   "CodeModel",

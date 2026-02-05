@@ -13,4 +13,9 @@ PCM_MODE
 \description{
 PCM mode (FALSE = IEEE float for 32-bit processing)
 }
+\examples{
+# Check PCM mode setting
+PCM_MODE
+
+}
 \keyword{datasets}

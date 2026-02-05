@@ -13,4 +13,9 @@ SAMPLE_RATE
 \description{
 Sample rate in Hz (CD quality)
 }
+\examples{
+# Use SAMPLE_RATE when creating Wave objects
+SAMPLE_RATE
+
+}
 \keyword{datasets}
