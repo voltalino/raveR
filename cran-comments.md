@@ -7,9 +7,18 @@
 * local macOS Sequoia 15.7.3, R 4.5.2
 * win-builder (R-devel)
 
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Removed all code that modified `.GlobalEnv` (specifically `.Random.seed`
+  save/restore logic in `generate_glitch_effect()`, `raver_compose()`, and
+  `raver_compose_section()`). Functions now set the seed without attempting
+  to restore previous RNG state.
+
 ## Notes
 
-This is a new submission.
+This is a new package submission.
 
 ### Package purpose
 
