@@ -8,7 +8,7 @@ Maintainer: Nim Voltalino <nim.voltalino@proton.me>
 Description: Transform R scripts into listenable deep house music. Analyzes
     code structure (functions, control flow, complexity) and maps it to
     musical parameters to generate deterministic audio output. Supports
-    multiple genres, live coding with file watching, and WAV/MP3 export.
+    multiple genres, live coding with file watching, and audio file export.
 License: MIT + file LICENSE
 URL: https://github.com/voltalino/raveR
 BugReports: https://github.com/voltalino/raveR/issues

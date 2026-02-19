@@ -14,6 +14,7 @@
 # ==============================================================================
 
 test_that("full pipeline: analyze -> map -> compose produces valid Wave", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   # Create test script
@@ -54,6 +55,7 @@ test_that("full pipeline: analyze -> map -> compose produces valid Wave", {
 })
 
 test_that("different scripts produce different outputs", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   # Script A: simple
@@ -119,6 +121,7 @@ test_that("different scripts produce different outputs", {
 })
 
 test_that("same script + seed produces identical outputs", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -149,6 +152,7 @@ test_that("same script + seed produces identical outputs", {
 # ==============================================================================
 
 test_that("output has expected duration (bars * bar_duration)", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -185,6 +189,7 @@ test_that("output has expected duration (bars * bar_duration)", {
 })
 
 test_that("output doesn't clip (max abs <= 1.0)", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -212,6 +217,7 @@ test_that("output doesn't clip (max abs <= 1.0)", {
 })
 
 test_that("output has audio content (not silence)", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -239,6 +245,7 @@ test_that("output has audio content (not silence)", {
 # ==============================================================================
 
 test_that("bpm parameter works (118-124 range enforced)", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -271,6 +278,7 @@ test_that("bpm parameter works (118-124 range enforced)", {
 })
 
 test_that("seed parameter works (deterministic output)", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -303,6 +311,7 @@ test_that("seed parameter works (deterministic output)", {
 # ==============================================================================
 
 test_that("all section types can be rendered", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -328,6 +337,7 @@ test_that("all section types can be rendered", {
 })
 
 test_that("drum samples are loaded and used", {
+  skip_on_cran()
   # Clear cache to ensure fresh load
   clear_sample_cache()
 

@@ -134,6 +134,7 @@ test_that("numeric steps preserve velocity values", {
 # =============================================================================
 
 test_that("rendered pattern has correct bar duration for BPM", {
+  skip_on_cran()
   # Use bass (synthesis, no samples needed)
   pat <- create_pattern("bass",
     c(TRUE, rep(FALSE, 15)),
@@ -159,6 +160,7 @@ test_that("rendered pattern has correct bar duration for BPM", {
 })
 
 test_that("active steps produce non-zero samples at correct positions", {
+  skip_on_cran()
   # Create pattern with one hit on step 5
   pat <- create_pattern("bass",
     c(FALSE, FALSE, FALSE, FALSE, TRUE, rep(FALSE, 11)),
@@ -181,6 +183,7 @@ test_that("active steps produce non-zero samples at correct positions", {
 })
 
 test_that("empty pattern (all FALSE) produces silence", {
+  skip_on_cran()
   # All steps false
   pat <- create_pattern("bass",
     rep(FALSE, 16),
@@ -202,6 +205,7 @@ test_that("empty pattern (all FALSE) produces silence", {
 # =============================================================================
 
 test_that("combined patterns have same duration as individual", {
+  skip_on_cran()
   # Create two patterns
   pat1 <- create_pattern("bass",
     c(TRUE, rep(FALSE, 15)),
@@ -224,6 +228,7 @@ test_that("combined patterns have same duration as individual", {
 })
 
 test_that("multiple patterns mixed without clipping", {
+  skip_on_cran()
   # Create patterns with high velocity
   pat1 <- create_pattern("bass",
     c(TRUE, FALSE, FALSE, FALSE, TRUE, rep(FALSE, 11)),

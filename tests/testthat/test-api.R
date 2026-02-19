@@ -1,6 +1,7 @@
 # Test composeR user-facing API
 
 test_that("composeR creates valid WAV file", {
+  skip_on_cran()
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   output_file <- tempfile(fileext = ".wav")
@@ -29,6 +30,7 @@ test_that("composeR creates valid WAV file", {
 })
 
 test_that("composeR creates valid MP3 file", {
+  skip_on_cran()
   skip_if_not(suppressWarnings(check_ffmpeg()), "FFmpeg not available")
 
   # Create a simple test script
@@ -95,6 +97,7 @@ test_that("composeR errors when output has no extension", {
 })
 
 test_that("composeR respects bpm parameter", {
+  skip_on_cran()
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   output_file <- tempfile(fileext = ".wav")
@@ -111,6 +114,7 @@ test_that("composeR respects bpm parameter", {
 })
 
 test_that("composeR handles parse errors gracefully", {
+  skip_on_cran()
   # Create a script with syntax error
   script_file <- tempfile(fileext = ".R")
   output_file <- tempfile(fileext = ".wav")
@@ -136,6 +140,7 @@ test_that("composeR handles parse errors gracefully", {
 })
 
 test_that("composeR produces deterministic output with same seed", {
+  skip_on_cran()
   # Create a simple test script
   script_file <- tempfile(fileext = ".R")
   output_file1 <- tempfile(fileext = ".wav")
@@ -203,6 +208,7 @@ test_that("stopR doesn't error when no playback active", {
 })
 
 test_that("playR creates controller in .live_env", {
+  skip_on_cran()
   skip_if_no_audio()
 
   # Create a simple test script
@@ -235,6 +241,7 @@ test_that("playR creates controller in .live_env", {
 })
 
 test_that("stopR clears controller from .live_env", {
+  skip_on_cran()
   skip_if_no_audio()
 
   # Create a simple test script
@@ -262,6 +269,7 @@ test_that("stopR clears controller from .live_env", {
 })
 
 test_that("playR stops previous playback before starting new", {
+  skip_on_cran()
   skip_if_no_audio()
 
   # Create two test scripts
@@ -297,6 +305,7 @@ test_that("playR stops previous playback before starting new", {
 })
 
 test_that("playR accepts custom bpm parameter", {
+  skip_on_cran()
   skip_if_no_audio()
 
   # Create a simple test script

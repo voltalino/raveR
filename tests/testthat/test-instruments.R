@@ -95,6 +95,7 @@ test_that("raver_bass_note returns Wave with correct duration", {
 })
 
 test_that("raver_bass_note has filtered character", {
+  skip_on_cran()
   # Generate bass note with low cutoff
   bass_filtered <- raver_bass_note(36, 0.5, cutoff_hz = 200)
   bass_bright <- raver_bass_note(36, 0.5, cutoff_hz = 4000)
@@ -180,6 +181,7 @@ test_that("raver_pad_note returns Wave with slow attack envelope", {
 })
 
 test_that("raver_pad_chord contains all chord notes", {
+  skip_on_cran()
   # min7 chord has 4 notes
   chord <- raver_pad_chord(48, "min7", 1.0)  # Cmin7
 
@@ -201,6 +203,7 @@ test_that("raver_pad_chord contains all chord notes", {
 })
 
 test_that("raver_pad_chord inversions change frequency distribution", {
+  skip_on_cran()
   chord_root <- raver_pad_chord(48, "minor", 0.5, inversion = 0)
   chord_inv1 <- raver_pad_chord(48, "minor", 0.5, inversion = 1)
 
@@ -242,6 +245,7 @@ test_that("raver_pad_note detuning creates slight chorus effect", {
 })
 
 test_that("raver_pad_progression has correct total duration", {
+  skip_on_cran()
   prog <- list(
     list(root = 57, type = "min7"),
     list(root = 53, type = "maj7")

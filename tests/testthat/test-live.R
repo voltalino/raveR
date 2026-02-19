@@ -102,6 +102,7 @@ test_that("PlaybackController deterministically selects BPM from same script", {
 # =============================================================================
 
 test_that("generate_buffer returns Wave object", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -111,6 +112,7 @@ test_that("generate_buffer returns Wave object", {
   expect_s4_class(buffer, "Wave")
 })
 test_that("generate_buffer produces expected duration", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -127,6 +129,7 @@ test_that("generate_buffer produces expected duration", {
 })
 
 test_that("generate_buffer works with different section types", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -141,6 +144,7 @@ test_that("generate_buffer works with different section types", {
 })
 
 test_that("generate_buffer respects bar count parameter", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -290,6 +294,7 @@ changed <- function() { 42 }
 # =============================================================================
 
 test_that("start sets is_playing to TRUE", {
+  skip_on_cran()
   skip_if_no_audio()
 
   script <- create_test_script()
@@ -309,6 +314,7 @@ test_that("start sets is_playing to TRUE", {
 })
 
 test_that("stop sets is_playing to FALSE", {
+  skip_on_cran()
   skip_if_no_audio()
 
   script <- create_test_script()
@@ -324,6 +330,7 @@ test_that("stop sets is_playing to FALSE", {
 })
 
 test_that("stop is idempotent (can call multiple times)", {
+  skip_on_cran()
   skip_if_no_audio()
 
   script <- create_test_script()
@@ -340,6 +347,7 @@ test_that("stop is idempotent (can call multiple times)", {
 })
 
 test_that("start is idempotent when already playing", {
+  skip_on_cran()
   skip_if_no_audio()
 
   script <- create_test_script()
@@ -361,6 +369,7 @@ test_that("start is idempotent when already playing", {
 })
 
 test_that("start resets current_bar to 0", {
+  skip_on_cran()
   skip_if_no_audio()
 
   script <- create_test_script()
@@ -505,6 +514,7 @@ test_that("on_file_change clears has_parse_error on successful parse", {
 # through the public interface or by examining side effects
 
 test_that("transition buffers contain valid audio data", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 
@@ -525,6 +535,7 @@ test_that("transition buffers contain valid audio data", {
 })
 
 test_that("transition buffers follow breakdown -> build -> drop pattern", {
+  skip_on_cran()
   script <- create_test_script()
   on.exit(unlink(script))
 

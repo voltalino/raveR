@@ -7,6 +7,7 @@
 # ==============================================================================
 
 test_that("auto-selected BPM is within 118-124 range", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   # Create test scripts with different names
@@ -29,6 +30,7 @@ test_that("auto-selected BPM is within 118-124 range", {
 })
 
 test_that("explicit BPM is used when provided", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -81,6 +83,7 @@ test_that("invalid BPM throws clear error", {
 # ==============================================================================
 
 test_that("same script with same seed produces identical output", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -102,6 +105,7 @@ test_that("same script with same seed produces identical output", {
 })
 
 test_that("different seeds produce different output", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   # Create two very different temp files (different functions, different complexity)
@@ -137,6 +141,7 @@ test_that("different seeds produce different output", {
 })
 
 test_that("no seed uses file_hash for determinism", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -159,6 +164,7 @@ test_that("no seed uses file_hash for determinism", {
 # ==============================================================================
 
 test_that("raver_compose_section returns Wave with correct duration", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -197,6 +203,7 @@ test_that("raver_compose_section returns Wave with correct duration", {
 })
 
 test_that("different section types have different characteristics", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -230,6 +237,7 @@ test_that("different section types have different characteristics", {
 # ==============================================================================
 
 test_that("raver_compose returns valid Wave object", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")
@@ -259,6 +267,7 @@ test_that("raver_compose returns valid Wave object", {
 })
 
 test_that("composed track has expected total duration", {
+  skip_on_cran()
   skip_if_not_installed("digest")
 
   temp_file <- tempfile(fileext = ".R")

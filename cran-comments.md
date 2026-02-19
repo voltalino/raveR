@@ -11,10 +11,14 @@
 
 This is a resubmission. In this version I have:
 
-* Removed all code that modified `.GlobalEnv` (specifically `.Random.seed`
-  save/restore logic in `generate_glitch_effect()`, `raver_compose()`, and
-  `raver_compose_section()`). Functions now set the seed without attempting
-  to restore previous RNG state.
+* Changed "WAV/MP3 export" to "audio file export" in the DESCRIPTION to
+  avoid the NOTE about possible spelling errors.
+
+* Added `skip_on_cran()` to 48 tests that perform heavy audio synthesis
+  (full track composition, multi-bar rendering, FFT analysis). This reduces
+  test time from ~285s to ~30s. The remaining 599 tests still provide good
+  coverage of core logic (analysis, mapping, error handling, validation,
+  state management).
 
 ## Notes
 
