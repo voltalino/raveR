@@ -24,10 +24,8 @@ before rendering. Even steps are delayed by swing_amount (as a fraction
 of one step). Odd steps remain on grid.
 }
 \examples{
-\dontrun{
 # Apply 10\% swing to steps 1-4
 swung <- apply_swing_to_steps(1:4, 0.10)
 # swung = c(1.0, 2.1, 3.0, 4.1)
-}
 
 }

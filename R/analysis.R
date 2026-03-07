@@ -197,12 +197,14 @@ extract_features <- function(pd) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Analyze a script
-#' model <- raver_analyze("my_script.R")
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1\nfor (i in 1:5) print(i)", tf)
+#' model <- raver_analyze(tf)
 #' model$functions    # Function definitions
 #' model$variables    # Variable assignments
 #' model$part_count   # Musical parameter (1-4)
+#' unlink(tf)
 #' }
 raver_analyze <- function(file_path) {
   # Validate file exists

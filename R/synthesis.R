@@ -18,10 +18,8 @@ NULL
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Generate 1 second of 440 Hz (A4)
 #' wave <- raver_sine(440, 1)
-#' }
 raver_sine <- function(freq, duration_sec, sample_rate = SAMPLE_RATE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::sine(
@@ -47,13 +45,11 @@ raver_sine <- function(freq, duration_sec, sample_rate = SAMPLE_RATE) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Generate 1 second of 110 Hz sawtooth (bass range)
 #' wave <- raver_sawtooth(110, 1)
 #'
 #' # Inverted sawtooth
 #' wave_inv <- raver_sawtooth(110, 1, reverse = TRUE)
-#' }
 raver_sawtooth <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, reverse = FALSE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::sawtooth(
@@ -80,13 +76,11 @@ raver_sawtooth <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, revers
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Generate 1 second of 220 Hz square wave
 #' wave <- raver_square(220, 1)
 #'
 #' # Narrow pulse (25% duty cycle)
 #' wave_pulse <- raver_square(220, 1, duty = 0.25)
-#' }
 raver_square <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, duty = 0.5) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::square(
@@ -111,11 +105,9 @@ raver_square <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, duty = 0
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Create a custom waveform from raw samples
 #' samples <- sin(2 * pi * 440 * (0:44099) / 44100)
 #' wave <- create_wave(samples)
-#' }
 create_wave <- function(samples, sample_rate = SAMPLE_RATE) {
   tuneR::Wave(
     left = as.numeric(samples),

@@ -24,10 +24,12 @@ audio players. This function performs the conversion using
 tuneR::normalize() with unit="16".
 }
 \examples{
-\dontrun{
+\donttest{
 # Generate and normalize for export
 wave <- raver_sine(440, 1)
 export_wave <- normalize_for_export(wave)
-tuneR::writeWave(export_wave, "output.wav")
+out <- tempfile(fileext = ".wav")
+tuneR::writeWave(export_wave, out)
+unlink(out)
 }
 }

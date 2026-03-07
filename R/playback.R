@@ -33,7 +33,7 @@ NULL
 #' For 16-bit PCM input, this scales by 32768.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Play a 440 Hz sine wave
 #' tone <- raver_sine(440, 1)
 #' instance <- play_audio(tone)
@@ -150,7 +150,7 @@ if (!inherits(wave, "Wave")) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Play a long tone and stop it early
 #' tone <- raver_sine(440, 10)
 #' play_audio(tone)
@@ -184,7 +184,7 @@ stop_audio <- function() {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Play and wait for completion
 #' tone <- raver_sine(440, 2)
 #' play_audio(tone)
@@ -221,7 +221,7 @@ wait_audio <- function(instance = NULL) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' tone <- raver_sine(440, 10)
 #' play_audio(tone)
 #' Sys.sleep(2)
@@ -256,7 +256,7 @@ pause_audio <- function(instance = NULL) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' tone <- raver_sine(440, 10)
 #' play_audio(tone)
 #' Sys.sleep(2)

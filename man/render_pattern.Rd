@@ -30,7 +30,7 @@ The pattern is rendered step by step:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 # Create and render a kick pattern
 kick_pat <- create_pattern("kick",
   c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,

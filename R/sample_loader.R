@@ -120,8 +120,12 @@ normalize_sample_format <- function(wave) {
 #' @return Wave object, or NULL if file is missing/corrupt
 #' @export
 #' @examples
-#' \dontrun{
-#' kick <- raver_load_sample("inst/samples/909_kick.wav")
+#' \donttest{
+#' # Load a WAV sample (returns NULL if not found)
+#' sample_path <- system.file("samples", "909_kick.wav", package = "raveR")
+#' if (nzchar(sample_path)) {
+#'   kick <- raver_load_sample(sample_path)
+#' }
 #' }
 raver_load_sample <- function(sample_path, force_reload = FALSE) {
   # Check cache first (unless force_reload)
@@ -186,7 +190,7 @@ raver_load_sample <- function(sample_path, force_reload = FALSE) {
 #'   Elements will be NULL if samples are missing.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' kit <- raver_get_drum_kit()
 #' if (!is.null(kit$kick)) {
 #'   # Use kick sample

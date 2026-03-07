@@ -33,9 +33,9 @@ The effect is subtle and intended for final mastering rather than
 dramatic tonal changes.
 }
 \examples{
-\dontrun{
-limited <- apply_master_limiter(normalized)
-eq_wave <- apply_master_eq(limited, bass_boost_db = 2)
+\donttest{
+tone <- raver_sine(440, 0.5)
+eq_wave <- apply_master_eq(tone, bass_boost_db = 2)
 }
 
 }

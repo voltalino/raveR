@@ -24,11 +24,9 @@ Sawtooth waves have a bright, buzzy timbre suitable for bass and leads.
 Uses tuneR::sawtooth() internally with standardized 32-bit float format.
 }
 \examples{
-\dontrun{
 # Generate 1 second of 110 Hz sawtooth (bass range)
 wave <- raver_sawtooth(110, 1)
 
 # Inverted sawtooth
 wave_inv <- raver_sawtooth(110, 1, reverse = TRUE)
-}
 }

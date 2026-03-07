@@ -29,7 +29,7 @@ deep sound. The ADSR envelope (attack=0.005, decay=0.1, sustain=0.8,
 release=0.1) provides a snappy attack with sustained body.
 }
 \examples{
-\dontrun{
+\donttest{
 # C2 bass note, 0.5 seconds
 bass_note <- raver_bass_note(36, 0.5)
 

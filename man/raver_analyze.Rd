@@ -18,11 +18,13 @@ definitions, function calls, and variable assignments. Returns a CodeModel
 object with the extracted features and computed musical parameters.
 }
 \examples{
-\dontrun{
-# Analyze a script
-model <- raver_analyze("my_script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1\nfor (i in 1:5) print(i)", tf)
+model <- raver_analyze(tf)
 model$functions    # Function definitions
 model$variables    # Variable assignments
 model$part_count   # Musical parameter (1-4)
+unlink(tf)
 }
 }

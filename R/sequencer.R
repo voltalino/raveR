@@ -38,7 +38,6 @@ NULL
 #'   }
 #'
 #' @examples
-#' \dontrun{
 #' # Four-on-the-floor kick
 #' kick <- create_pattern("kick",
 #'   c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -52,7 +51,6 @@ NULL
 #'   c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
 #'     FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE),
 #'   note = 36)  # C2
-#' }
 #'
 #' @export
 create_pattern <- function(instrument, steps, note = NULL, velocity = 1.0, swing = 0.0) {
@@ -188,7 +186,7 @@ mix_waves_at_positions <- function(base_wave, waves, positions) {
 #' 4. Overlapping notes are summed (mixed), not replaced
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Create and render a kick pattern
 #' kick_pat <- create_pattern("kick",
 #'   c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -288,12 +286,14 @@ render_pattern <- function(pattern, bpm, sample_rate = SAMPLE_RATE) {
 #' to prevent clipping while maintaining relative loudness.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Create drum patterns
 #' kick <- create_pattern("kick",
-#'   c(T,F,F,F, T,F,F,F, T,F,F,F, T,F,F,F))
+#'   c(TRUE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE,
+#'     TRUE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE))
 #' snare <- create_pattern("snare",
-#'   c(F,F,F,F, T,F,F,F, F,F,F,F, T,F,F,F))
+#'   c(FALSE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE,
+#'     FALSE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE))
 #' hihat <- create_pattern("hihat_closed", rep(TRUE, 16), swing = 0.08)
 #'
 #' # Combine into groove

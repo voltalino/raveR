@@ -21,8 +21,6 @@ Creates a sine wave at the specified frequency and duration.
 Uses tuneR::sine() internally with standardized 32-bit float format.
 }
 \examples{
-\dontrun{
 # Generate 1 second of 440 Hz (A4)
 wave <- raver_sine(440, 1)
-}
 }

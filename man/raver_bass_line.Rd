@@ -30,7 +30,7 @@ is generated with the corresponding duration (converted from 16th notes
 to seconds based on BPM). Rests are rendered as silence.
 }
 \examples{
-\dontrun{
+\donttest{
 # Classic house bass pattern: C2, rest, C3, C2
 notes <- c(36, 0, 48, 36)
 durations <- c(4, 4, 4, 4)  # All quarter notes

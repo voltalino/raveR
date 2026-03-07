@@ -28,7 +28,7 @@ for richness. A moderate lowpass filter keeps it from being too harsh
 while maintaining presence in the mix.
 }
 \examples{
-\dontrun{
+\donttest{
 note <- raver_lead_note(60, 0.5)  # C4, half second
 }
 

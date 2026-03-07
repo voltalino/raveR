@@ -30,7 +30,7 @@ A velocity of 0.5 produces half the amplitude, which is approximately
 throwing an error to allow graceful degradation.
 }
 \examples{
-\dontrun{
+\donttest{
 kick <- raver_drum_hit("kick", velocity = 0.8)
 snare <- raver_drum_hit("snare", velocity = 0.9)
 soft_hihat <- raver_drum_hit("hihat_closed", velocity = 0.4)

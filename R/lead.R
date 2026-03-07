@@ -23,7 +23,7 @@ NULL
 #' while maintaining presence in the mix.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' note <- raver_lead_note(60, 0.5)  # C4, half second
 #' }
 #'

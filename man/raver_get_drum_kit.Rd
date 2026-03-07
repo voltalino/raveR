@@ -22,7 +22,7 @@ Loads all standard 909 drum samples from the package's inst/samples
 directory.
 }
 \examples{
-\dontrun{
+\donttest{
 kit <- raver_get_drum_kit()
 if (!is.null(kit$kick)) {
   # Use kick sample

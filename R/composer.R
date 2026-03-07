@@ -175,10 +175,12 @@ apply_genre_swing <- function(wave, genre_config) {
 #' 6. Apply master processing (normalize, limit)
 #'
 #' @examples
-#' \dontrun{
-#' model <- raver_analyze("my_script.R")
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' model <- raver_analyze(tf)
 #' track <- raver_compose(model, bpm = 122)
-#' raver_export_wav(track, "output.wav")
+#' unlink(tf)
 #' }
 #'
 #' @export
@@ -258,9 +260,12 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
 #' - Generating short clips for demos
 #'
 #' @examples
-#' \dontrun{
-#' model <- raver_analyze("my_script.R")
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' model <- raver_analyze(tf)
 #' drop <- raver_compose_section(model, "drop", bpm = 122, bars = 8)
+#' unlink(tf)
 #' }
 #'
 #' @export

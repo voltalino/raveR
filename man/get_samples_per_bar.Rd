@@ -19,8 +19,6 @@ Calculates the number of samples per bar (4 beats) at the
 given tempo. Returns floating-point for accuracy in calculations.
 }
 \examples{
-\dontrun{
 spbar <- get_samples_per_bar(120)  # 88200 samples (2 seconds)
-}
 
 }

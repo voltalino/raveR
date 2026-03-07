@@ -26,12 +26,14 @@ mixed together. The mix is normalized by dividing by sqrt(n_patterns)
 to prevent clipping while maintaining relative loudness.
 }
 \examples{
-\dontrun{
+\donttest{
 # Create drum patterns
 kick <- create_pattern("kick",
-  c(T,F,F,F, T,F,F,F, T,F,F,F, T,F,F,F))
+  c(TRUE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE,
+    TRUE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE))
 snare <- create_pattern("snare",
-  c(F,F,F,F, T,F,F,F, F,F,F,F, T,F,F,F))
+  c(FALSE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE,
+    FALSE,FALSE,FALSE,FALSE, TRUE,FALSE,FALSE,FALSE))
 hihat <- create_pattern("hihat_closed", rep(TRUE, 16), swing = 0.08)
 
 # Combine into groove

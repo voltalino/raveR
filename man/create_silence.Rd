@@ -25,11 +25,9 @@ for maximum compatibility. Use normalize_for_export() to convert
 to 16-bit before WAV export.
 }
 \examples{
-\dontrun{
 # Create 0.5 seconds of silence
 gap <- create_silence(0.5)
 
 # Create 2 seconds of silence at custom sample rate
 gap_48k <- create_silence(2, sample_rate = 48000)
-}
 }

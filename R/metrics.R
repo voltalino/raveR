@@ -15,13 +15,11 @@ NULL
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
 #' expr <- parse(text = "for (i in 1:10) { if (i > 5) print(i) }", keep.source = TRUE)
 #' pd <- getParseData(expr)
 #' metrics <- calculate_metrics(pd)
 #' metrics$cyclomatic       # Cyclomatic complexity
 #' metrics$nesting_depth    # Maximum nesting depth
-#' }
 calculate_metrics <- function(pd) {
   # Default metrics for empty/NULL parse data
   default_metrics <- list(
@@ -71,12 +69,10 @@ calculate_metrics <- function(pd) {
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
 #' expr <- parse(text = "for (i in 1:10) { for (j in 1:i) { print(j) } }",
 #'               keep.source = TRUE)
 #' pd <- getParseData(expr)
 #' calculate_nesting_depth(pd)  # Returns 2
-#' }
 calculate_nesting_depth <- function(pd) {
   if (is.null(pd) || nrow(pd) == 0) {
     return(0L)

@@ -29,7 +29,7 @@ NULL
 #' Effects are applied in a musically sensible order to avoid artifacts.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Generate a tone
 #' tone <- raver_sine(440, 2)
 #'
@@ -108,7 +108,7 @@ generate_glitch_effect <- function(wave, intensity = 0.5, seed = NULL) {
 #' This creates the characteristic "CD skip" or "digital glitch" sound.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' tone <- raver_sine(440, 2)
 #' stuttered <- apply_stutter(tone, stutter_count = 3, stutter_length_sec = 0.05)
 #' }
@@ -194,7 +194,7 @@ apply_stutter <- function(wave, stutter_count = 5L, stutter_length_sec = 0.1,
 #' effectively 12-bit (4096 levels), creating stair-stepped waveforms.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' tone <- raver_sine(440, 2)
 #'
 #' # Light crush
@@ -287,7 +287,7 @@ apply_bitcrush <- function(wave, bit_reduction = 4L) {
 #' with silence, creating the effect of momentary signal loss.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' tone <- raver_sine(440, 2)
 #' with_dropouts <- apply_dropout(tone, dropout_count = 5, dropout_length_sec = 0.02)
 #' }

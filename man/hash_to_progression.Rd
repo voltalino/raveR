@@ -23,10 +23,8 @@ The progression uses common deep house chord types: min7, maj7, dom7, min9.
 Root notes are expressed as scale degrees (1-7) to be relative to the key.
 }
 \examples{
-\dontrun{
 prog <- hash_to_progression("clean_data")
 # Returns list of chord specs like:
 # list(list(root = 1, type = "min7"), list(root = 4, type = "maj7"), ...)
-}
 
 }

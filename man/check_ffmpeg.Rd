@@ -26,11 +26,7 @@ Installation instructions:
 }
 }
 \examples{
-\dontrun{
-if (check_ffmpeg()) {
-  export_mp3(my_audio, "output.mp3")
-} else {
-  export_wav(my_audio, "output.wav")  # Fallback
-}
+\donttest{
+check_ffmpeg()
 }
 }

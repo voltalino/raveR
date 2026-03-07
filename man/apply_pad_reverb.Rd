@@ -40,7 +40,7 @@ by simulating early reflections in a room. Each delay is progressively
 quieter, creating a natural decay tail.
 }
 \examples{
-\dontrun{
+\donttest{
 pad <- raver_pad_chord(48, "min9", 2.0)
 padrev <- apply_pad_reverb(pad)
 }

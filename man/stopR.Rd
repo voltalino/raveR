@@ -17,7 +17,7 @@ If no playback is currently active, this function does nothing but print
 an informative message.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # After starting playback
 playR("my_analysis.R")
 

@@ -28,9 +28,7 @@ robotic. The offset is uniformly distributed between -amount and +amount
 of a 16th note duration (at reference 120 BPM).
 }
 \examples{
-\dontrun{
 # Humanize with deterministic seed
 pos <- humanize_timing(44100, amount = 0.02, seed = 42)
-}
 
 }

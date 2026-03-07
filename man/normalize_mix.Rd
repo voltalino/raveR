@@ -34,7 +34,9 @@ For example, with headroom_db = -3.0:
 }
 }
 \examples{
-\dontrun{
+\donttest{
+tone <- raver_sine(440, 0.5)
+tracks <- list(a = tone)
 mixed <- mix_tracks(tracks)
 normalized <- normalize_mix(mixed, headroom_db = -3)
 }

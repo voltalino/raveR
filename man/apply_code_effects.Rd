@@ -21,11 +21,13 @@ Main entry point for applying code-driven effects to
 a generated audio section.
 }
 \examples{
-\dontrun{
-# Analyze a script and apply effects to audio
-model <- raver_analyze("my_script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1\nfor (i in 1:5) print(i)", tf)
+model <- raver_analyze(tf)
 tone <- raver_sine(440, 2)
 processed <- apply_code_effects(tone, model, "deep_house")
+unlink(tf)
 }
 
 }

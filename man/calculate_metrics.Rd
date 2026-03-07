@@ -17,12 +17,10 @@ Calculate cyclomatic complexity, nesting depth, and control flow count
 from R parse data. These metrics drive musical density in generated audio.
 }
 \examples{
-\dontrun{
 expr <- parse(text = "for (i in 1:10) { if (i > 5) print(i) }", keep.source = TRUE)
 pd <- getParseData(expr)
 metrics <- calculate_metrics(pd)
 metrics$cyclomatic       # Cyclomatic complexity
 metrics$nesting_depth    # Maximum nesting depth
-}
 }
 \keyword{internal}

@@ -68,12 +68,10 @@ GROOVE_PRESETS <- list(
 #' - Step 4: base position + 10% of step duration
 #'
 #' @examples
-#' \dontrun{
 #' # Step 1 timing at 120 BPM
 #' t1 <- calculate_step_timing(1, 120)
 #' # Step 2 with 10% swing
 #' t2 <- calculate_step_timing(2, 120, swing_amount = 0.10)
-#' }
 #'
 #' @export
 calculate_step_timing <- function(step, bpm, swing_amount = 0.0, steps_per_bar = 16) {
@@ -115,11 +113,9 @@ calculate_step_timing <- function(step, bpm, swing_amount = 0.0, steps_per_bar =
 #' of one step). Odd steps remain on grid.
 #'
 #' @examples
-#' \dontrun{
 #' # Apply 10% swing to steps 1-4
 #' swung <- apply_swing_to_steps(1:4, 0.10)
 #' # swung = c(1.0, 2.1, 3.0, 4.1)
-#' }
 #'
 #' @export
 apply_swing_to_steps <- function(steps, swing_amount) {
@@ -154,10 +150,8 @@ apply_swing_to_steps <- function(steps, swing_amount) {
 #' of a 16th note duration (at reference 120 BPM).
 #'
 #' @examples
-#' \dontrun{
 #' # Humanize with deterministic seed
 #' pos <- humanize_timing(44100, amount = 0.02, seed = 42)
-#' }
 #'
 #' @export
 humanize_timing <- function(position_samples, amount = 0.02, seed = NULL) {
@@ -201,9 +195,7 @@ max_offset <- as.integer(amount * ref_16th_samples)
 #' @return Numeric samples per beat (not rounded)
 #'
 #' @examples
-#' \dontrun{
 #' spb <- get_samples_per_beat(120)  # 22050 samples
-#' }
 #'
 #' @export
 get_samples_per_beat <- function(bpm, sample_rate = SAMPLE_RATE) {
@@ -221,9 +213,7 @@ get_samples_per_beat <- function(bpm, sample_rate = SAMPLE_RATE) {
 #' @return Numeric samples per bar (not rounded)
 #'
 #' @examples
-#' \dontrun{
 #' spbar <- get_samples_per_bar(120)  # 88200 samples (2 seconds)
-#' }
 #'
 #' @export
 get_samples_per_bar <- function(bpm, sample_rate = SAMPLE_RATE) {

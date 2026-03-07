@@ -142,7 +142,7 @@ apply_lowpass_filter <- function(wave, cutoff_hz) {
 #' release=0.1) provides a snappy attack with sustained body.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # C2 bass note, 0.5 seconds
 #' bass_note <- raver_bass_note(36, 0.5)
 #'
@@ -202,7 +202,7 @@ freq <- raver_midi_to_freq(midi_note)
 #' to seconds based on BPM). Rests are rendered as silence.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Classic house bass pattern: C2, rest, C3, C2
 #' notes <- c(36, 0, 48, 36)
 #' durations <- c(4, 4, 4, 4)  # All quarter notes
@@ -266,7 +266,7 @@ raver_bass_line <- function(notes, durations, bpm, velocity = 0.9, cutoff_hz = 8
 #' patterns like c("root", "rest", "octave", "rest") repeated.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Classic octave pattern on C2
 #' pattern <- c("root", "rest", "octave", "rest")
 #' bass <- raver_bass_octave_pattern(36, rep(pattern, 4), bpm = 120)

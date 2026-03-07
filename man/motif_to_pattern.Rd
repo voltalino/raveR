@@ -27,7 +27,7 @@ the motif is used as the pattern's note parameter (for monophonic instruments).
 Velocities are applied per step.
 }
 \examples{
-\dontrun{
+\donttest{
 scale <- raver_build_scale(57, "natural_minor", 2)
 motif <- generate_motif("clean_data", scale)
 pattern <- motif_to_pattern(motif, "bass")

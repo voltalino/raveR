@@ -47,18 +47,12 @@ NULL
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' # Basic usage - create WAV file
-#' composeR("my_analysis.R", "output.wav")
-#'
-#' # Create MP3 file (requires FFmpeg)
-#' composeR("my_analysis.R", "output.mp3")
-#'
-#' # With custom BPM
-#' composeR("my_analysis.R", "output.wav", bpm = 122)
-#'
-#' # With explicit seed for reproducibility
-#' composeR("my_analysis.R", "output.wav", seed = 12345)
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' out <- tempfile(fileext = ".wav")
+#' composeR(tf, out, bpm = 122)
+#' unlink(c(tf, out))
 #' }
 composeR <- function(script_path, output_path, bpm = NULL, seed = NULL, genre = "deep_house") {
   # Validate script exists
@@ -176,7 +170,7 @@ detect_output_format <- function(output_path) {
 #' playback when you're done.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Start live playback
 #' playR("my_analysis.R")
 #'
@@ -242,7 +236,7 @@ playR <- function(script_path, bpm = NULL, genre = "deep_house") {
 #' an informative message.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # After starting playback
 #' playR("my_analysis.R")
 #'

@@ -32,7 +32,7 @@ The function randomly selects and combines effects based on intensity:
 Effects are applied in a musically sensible order to avoid artifacts.
 }
 \examples{
-\dontrun{
+\donttest{
 # Generate a tone
 tone <- raver_sine(440, 2)
 

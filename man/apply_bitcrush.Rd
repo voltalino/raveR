@@ -25,7 +25,7 @@ For example, reducing by 4 bits takes 16-bit audio (65536 levels) down to
 effectively 12-bit (4096 levels), creating stair-stepped waveforms.
 }
 \examples{
-\dontrun{
+\donttest{
 tone <- raver_sine(440, 2)
 
 # Light crush

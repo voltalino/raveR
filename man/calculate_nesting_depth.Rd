@@ -18,11 +18,9 @@ Uses containment-based approach: compares parent expr line ranges
 to determine which control structures are nested within others.
 }
 \examples{
-\dontrun{
 expr <- parse(text = "for (i in 1:10) { for (j in 1:i) { print(j) } }",
               keep.source = TRUE)
 pd <- getParseData(expr)
 calculate_nesting_depth(pd)  # Returns 2
-}
 }
 \keyword{internal}

@@ -29,7 +29,7 @@ replaces the following audio with repeated copies of the stutter segment.
 This creates the characteristic "CD skip" or "digital glitch" sound.
 }
 \examples{
-\dontrun{
+\donttest{
 tone <- raver_sine(440, 2)
 stuttered <- apply_stutter(tone, stutter_count = 3, stutter_length_sec = 0.05)
 }

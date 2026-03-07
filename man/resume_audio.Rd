@@ -17,7 +17,7 @@ NULL (invisibly)
 Resumes paused audio playback.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 tone <- raver_sine(440, 10)
 play_audio(tone)
 Sys.sleep(2)

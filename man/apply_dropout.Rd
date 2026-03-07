@@ -26,7 +26,7 @@ Dropout positions are chosen pseudo-randomly. Each dropout replaces audio
 with silence, creating the effect of momentary signal loss.
 }
 \examples{
-\dontrun{
+\donttest{
 tone <- raver_sine(440, 2)
 with_dropouts <- apply_dropout(tone, dropout_count = 5, dropout_length_sec = 0.02)
 }

@@ -30,7 +30,7 @@ For 32-bit float input, this involves scaling by the max absolute value.
 For 16-bit PCM input, this scales by 32768.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # Play a 440 Hz sine wave
 tone <- raver_sine(440, 1)
 instance <- play_audio(tone)

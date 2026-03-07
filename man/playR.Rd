@@ -36,7 +36,7 @@ The R console remains interactive during playback. Use stopR() to halt
 playback when you're done.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # Start live playback
 playR("my_analysis.R")
 

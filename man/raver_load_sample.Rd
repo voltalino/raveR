@@ -19,7 +19,11 @@ Loads a WAV file, normalizes its format, and caches it for efficient
 subsequent access.
 }
 \examples{
-\dontrun{
-kick <- raver_load_sample("inst/samples/909_kick.wav")
+\donttest{
+# Load a WAV sample (returns NULL if not found)
+sample_path <- system.file("samples", "909_kick.wav", package = "raveR")
+if (nzchar(sample_path)) {
+  kick <- raver_load_sample(sample_path)
+}
 }
 }

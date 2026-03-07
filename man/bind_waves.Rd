@@ -24,7 +24,7 @@ formats upfront and provides clear error messages if mismatches
 are detected.
 }
 \examples{
-\dontrun{
+\donttest{
 # Concatenate three different tones
 w1 <- raver_sine(440, 0.5)   # 0.5 sec of 440 Hz
 w2 <- raver_sine(550, 0.5)   # 0.5 sec of 550 Hz

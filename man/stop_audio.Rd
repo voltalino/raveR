@@ -14,7 +14,7 @@ Stops the current audio playback. Safe to call even when nothing
 is playing - the function will simply do nothing.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # Play a long tone and stop it early
 tone <- raver_sine(440, 10)
 play_audio(tone)

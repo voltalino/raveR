@@ -40,7 +40,7 @@ NULL
 #' - Byte 15: Phrase length modifier (4-8 notes)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scale <- raver_build_scale(57, "natural_minor", 2)
 #' motif <- generate_motif("clean_data", scale)
 #' motif$rhythm   # 16-step pattern
@@ -124,7 +124,7 @@ hash_input <- if (!is.null(seed)) paste0(name, seed) else name
 #' Velocities are applied per step.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scale <- raver_build_scale(57, "natural_minor", 2)
 #' motif <- generate_motif("clean_data", scale)
 #' pattern <- motif_to_pattern(motif, "bass")
@@ -177,7 +177,7 @@ motif_to_pattern <- function(motif, instrument = "bass", duration_16ths = 2) {
 #' - Velocities: Adjusted within 0.1 range (scaled by variation)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' scale <- raver_build_scale(57, "natural_minor", 2)
 #' motif <- generate_motif("clean_data", scale)
 #' evolved <- evolve_motif(motif, 0.1)
@@ -268,10 +268,8 @@ evolve_motif <- function(motif, variation = 0.1) {
 #' @return Integer MIDI note number for the selected key
 #'
 #' @examples
-#' \dontrun{
 #' key <- hash_to_key("my_data_pipeline.R")
 #' # Always returns the same key for the same name
-#' }
 #'
 #' @export
 hash_to_key <- function(name) {
@@ -300,11 +298,9 @@ hash_to_key <- function(name) {
 #' Root notes are expressed as scale degrees (1-7) to be relative to the key.
 #'
 #' @examples
-#' \dontrun{
 #' prog <- hash_to_progression("clean_data")
 #' # Returns list of chord specs like:
 #' # list(list(root = 1, type = "min7"), list(root = 4, type = "maj7"), ...)
-#' }
 #'
 #' @export
 hash_to_progression <- function(name, length = 4) {

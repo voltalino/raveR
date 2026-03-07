@@ -41,9 +41,12 @@ This function is useful for:
 }
 }
 \examples{
-\dontrun{
-model <- raver_analyze("my_script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+model <- raver_analyze(tf)
 drop <- raver_compose_section(model, "drop", bpm = 122, bars = 8)
+unlink(tf)
 }
 
 }

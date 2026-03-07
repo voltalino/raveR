@@ -34,7 +34,7 @@ at 120 BPM) before playback begins, we ensure smooth audio output.
 The content_fn is called once to generate the buffer content.
 }
 \examples{
-\dontrun{
+\donttest{
 # Pre-render a 4-second buffer with a 440 Hz sine wave
 buffer <- render_buffer(4, function() raver_sine(440, 4))
 

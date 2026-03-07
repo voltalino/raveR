@@ -36,7 +36,7 @@ Each element of the pattern is a 16th note. A typical house bass uses
 patterns like c("root", "rest", "octave", "rest") repeated.
 }
 \examples{
-\dontrun{
+\donttest{
 # Classic octave pattern on C2
 pattern <- c("root", "rest", "octave", "rest")
 bass <- raver_bass_octave_pattern(36, rep(pattern, 4), bpm = 120)

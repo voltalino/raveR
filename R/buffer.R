@@ -25,13 +25,11 @@ NULL
 #' to 16-bit before WAV export.
 #'
 #' @examples
-#' \dontrun{
 #' # Create 0.5 seconds of silence
 #' gap <- create_silence(0.5)
 #'
 #' # Create 2 seconds of silence at custom sample rate
 #' gap_48k <- create_silence(2, sample_rate = 48000)
-#' }
 create_silence <- function(duration_sec, sample_rate = SAMPLE_RATE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::silence(
@@ -69,7 +67,7 @@ create_silence <- function(duration_sec, sample_rate = SAMPLE_RATE) {
 #' The content_fn is called once to generate the buffer content.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Pre-render a 4-second buffer with a 440 Hz sine wave
 #' buffer <- render_buffer(4, function() raver_sine(440, 4))
 #'
@@ -113,11 +111,13 @@ if (!inherits(content, "Wave")) {
 #' tuneR::normalize() with unit="16".
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Generate and normalize for export
 #' wave <- raver_sine(440, 1)
 #' export_wave <- normalize_for_export(wave)
-#' tuneR::writeWave(export_wave, "output.wav")
+#' out <- tempfile(fileext = ".wav")
+#' tuneR::writeWave(export_wave, out)
+#' unlink(out)
 #' }
 normalize_for_export <- function(wave) {
   if (!inherits(wave, "Wave")) {
@@ -144,7 +144,7 @@ normalize_for_export <- function(wave) {
 #' are detected.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Concatenate three different tones
 #' w1 <- raver_sine(440, 0.5)   # 0.5 sec of 440 Hz
 #' w2 <- raver_sine(550, 0.5)   # 0.5 sec of 550 Hz

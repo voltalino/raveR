@@ -44,7 +44,7 @@ A master ADSR envelope is applied to the combined signal, and
 reverb is added for the characteristic deep house pad sound.
 }
 \examples{
-\dontrun{
+\donttest{
 # Cmin9 pad, 4 seconds
 chord <- raver_pad_chord(48, "min9", 4.0)
 

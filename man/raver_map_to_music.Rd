@@ -18,11 +18,14 @@ Uses MD5 hashing to ensure same input always produces same output.
 Functions map to parts (1-4), variables map to instruments (1-5).
 }
 \examples{
-\dontrun{
-model <- raver_analyze("script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+model <- raver_analyze(tf)
 mapping <- raver_map_to_music(model)
 mapping$function_parts        # Named list: function -> part (1-4)
 mapping$variable_instruments  # Named list: variable -> instrument (1-5)
 mapping$arrangement           # Overall arrangement parameters
+unlink(tf)
 }
 }

@@ -26,7 +26,7 @@ NULL
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Create controller for a script
 #' ctrl <- PlaybackController$new("my_script.R", bpm = 120)
 #' ctrl$start()

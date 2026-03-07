@@ -19,8 +19,6 @@ Calculates the number of samples per beat (quarter note) at
 the given tempo. Returns floating-point for accuracy in calculations.
 }
 \examples{
-\dontrun{
 spb <- get_samples_per_beat(120)  # 22050 samples
-}
 
 }

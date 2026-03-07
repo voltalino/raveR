@@ -32,10 +32,13 @@ The section is rendered by:
 }
 }
 \examples{
-\dontrun{
-model <- raver_analyze("script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+model <- raver_analyze(tf)
 arr <- create_arrangement(model)
 intro_wave <- render_section(arr$sections$intro, arr)
+unlink(tf)
 }
 
 }

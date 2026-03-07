@@ -26,7 +26,7 @@ A Wave object containing the full progression
 Generates a sequence of pad chords forming a progression.
 }
 \examples{
-\dontrun{
+\donttest{
 # Am7 -> Fmaj7 progression, 1 bar each
 prog <- list(
   list(root = 57, type = "min7"),

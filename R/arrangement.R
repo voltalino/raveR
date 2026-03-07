@@ -93,11 +93,14 @@ SECTION_TYPES <- list(
 #' - Each function gets a unique motif via generate_motif()
 #'
 #' @examples
-#' \dontrun{
-#' model <- raver_analyze("script.R")
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' model <- raver_analyze(tf)
 #' arr <- create_arrangement(model, bpm = 122)
 #' arr$sections  # List of section specs
 #' arr$motifs    # Function-specific motifs
+#' unlink(tf)
 #' }
 #'
 #' @export
@@ -334,10 +337,13 @@ build_sections <- function(complexity, code_model, complexity_change = "same", g
 #' 6. Applying filter envelope
 #'
 #' @examples
-#' \dontrun{
-#' model <- raver_analyze("script.R")
+#' \donttest{
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' model <- raver_analyze(tf)
 #' arr <- create_arrangement(model)
 #' intro_wave <- render_section(arr$sections$intro, arr)
+#' unlink(tf)
 #' }
 #'
 #' @export
@@ -635,10 +641,8 @@ apply_section_filter <- function(samples, start_hz, end_hz, bars, sample_rate = 
 #' @return Character vector of element names
 #'
 #' @examples
-#' \dontrun{
 #' elements_full <- get_section_elements("drop", 1.0)
 #' elements_sparse <- get_section_elements("drop", 0.3)
-#' }
 #'
 #' @export
 get_section_elements <- function(section_type, density = 1.0) {

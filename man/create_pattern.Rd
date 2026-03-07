@@ -42,7 +42,6 @@ Creates a pattern data structure for one bar of a single
 instrument. The pattern contains step triggers and timing information.
 }
 \examples{
-\dontrun{
 # Four-on-the-floor kick
 kick <- create_pattern("kick",
   c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -56,6 +55,5 @@ bass <- create_pattern("bass",
   c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
     FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE),
   note = 36)  # C2
-}
 
 }

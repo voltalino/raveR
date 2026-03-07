@@ -13,12 +13,15 @@ NULL
 #' instrument count, density level).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # CodeModel is typically created via raver_analyze()
-#' model <- raver_analyze("my_script.R")
+#' tf <- tempfile(fileext = ".R")
+#' writeLines("f <- function(x) x + 1", tf)
+#' model <- raver_analyze(tf)
 #' model$functions
 #' model$cyclomatic_complexity
 #' model$summary()
+#' unlink(tf)
 #' }
 #'
 #' @export

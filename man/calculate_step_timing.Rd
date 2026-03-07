@@ -41,11 +41,9 @@ For example, with swing_amount = 0.10 at 120 BPM:
 }
 }
 \examples{
-\dontrun{
 # Step 1 timing at 120 BPM
 t1 <- calculate_step_timing(1, 120)
 # Step 2 with 10\% swing
 t2 <- calculate_step_timing(2, 120, swing_amount = 0.10)
-}
 
 }

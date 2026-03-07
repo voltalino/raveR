@@ -34,7 +34,7 @@ Swing delays even-numbered steps (2nd, 4th, 6th, etc.) by a fraction
 of a 16th note. Common house swing values are 0.05 to 0.15.
 }
 \examples{
-\dontrun{
+\donttest{
 # 4-on-the-floor kick pattern
 four_on_floor <- c(TRUE, rep(FALSE, 3), TRUE, rep(FALSE, 3),
                    TRUE, rep(FALSE, 3), TRUE, rep(FALSE, 3))

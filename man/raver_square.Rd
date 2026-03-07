@@ -24,11 +24,9 @@ Square waves have a hollow, clarinet-like timbre suitable for pads.
 Uses tuneR::square() internally with standardized 32-bit float format.
 }
 \examples{
-\dontrun{
 # Generate 1 second of 220 Hz square wave
 wave <- raver_square(220, 1)
 
 # Narrow pulse (25\% duty cycle)
 wave_pulse <- raver_square(220, 1, duty = 0.25)
-}
 }

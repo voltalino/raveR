@@ -20,9 +20,7 @@ consistent format settings (32-bit float, specified sample rate).
 Used by the buffer architecture and for custom waveform generation.
 }
 \examples{
-\dontrun{
 # Create a custom waveform from raw samples
 samples <- sin(2 * pi * 440 * (0:44099) / 44100)
 wave <- create_wave(samples)
-}
 }

@@ -17,9 +17,7 @@ Hashes a name to deterministically select a root MIDI note
 from the common deep house keys.
 }
 \examples{
-\dontrun{
 key <- hash_to_key("my_data_pipeline.R")
 # Always returns the same key for the same name
-}
 
 }

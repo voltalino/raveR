@@ -58,17 +58,11 @@ Error handling:
 }
 }
 \examples{
-\dontrun{
-# Basic usage - create WAV file
-composeR("my_analysis.R", "output.wav")
-
-# Create MP3 file (requires FFmpeg)
-composeR("my_analysis.R", "output.mp3")
-
-# With custom BPM
-composeR("my_analysis.R", "output.wav", bpm = 122)
-
-# With explicit seed for reproducibility
-composeR("my_analysis.R", "output.wav", seed = 12345)
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+out <- tempfile(fileext = ".wav")
+composeR(tf, out, bpm = 122)
+unlink(c(tf, out))
 }
 }

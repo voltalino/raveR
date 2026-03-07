@@ -29,13 +29,12 @@ The file is written with extensible=FALSE for maximum compatibility with
 audio players and software.
 }
 \examples{
-\dontrun{
+\donttest{
 # Generate and export a sine wave
 tone <- raver_sine(440, 2)
-path <- export_wav(tone, "my_tone.wav")
+out <- tempfile(fileext = ".wav")
+path <- export_wav(tone, out)
 print(path)  # Full path to file
-
-# Extension added automatically
-path <- export_wav(tone, "my_tone")  # Creates my_tone.wav
+unlink(out)
 }
 }

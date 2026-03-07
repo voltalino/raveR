@@ -26,14 +26,13 @@ NULL
 #' audio players and software.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Generate and export a sine wave
 #' tone <- raver_sine(440, 2)
-#' path <- export_wav(tone, "my_tone.wav")
+#' out <- tempfile(fileext = ".wav")
+#' path <- export_wav(tone, out)
 #' print(path)  # Full path to file
-#'
-#' # Extension added automatically
-#' path <- export_wav(tone, "my_tone")  # Creates my_tone.wav
+#' unlink(out)
 #' }
 export_wav <- function(wave, filename, bit_depth = 16L) {
   # Validate input
@@ -113,12 +112,8 @@ export_wav <- function(wave, filename, bit_depth = 16L) {
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' if (check_ffmpeg()) {
-#'   export_mp3(my_audio, "output.mp3")
-#' } else {
-#'   export_wav(my_audio, "output.wav")  # Fallback
-#' }
+#' \donttest{
+#' check_ffmpeg()
 #' }
 check_ffmpeg <- function() {
   # Try to get available muxers from av package

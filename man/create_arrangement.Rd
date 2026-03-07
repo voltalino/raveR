@@ -45,11 +45,14 @@ The arrangement maps code characteristics to musical structure:
 }
 }
 \examples{
-\dontrun{
-model <- raver_analyze("script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+model <- raver_analyze(tf)
 arr <- create_arrangement(model, bpm = 122)
 arr$sections  # List of section specs
 arr$motifs    # Function-specific motifs
+unlink(tf)
 }
 
 }

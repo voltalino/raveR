@@ -43,7 +43,7 @@ The motif is extracted from the MD5 hash as follows:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 scale <- raver_build_scale(57, "natural_minor", 2)
 motif <- generate_motif("clean_data", scale)
 motif$rhythm   # 16-step pattern

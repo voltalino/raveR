@@ -20,9 +20,7 @@ Returns the list of elements for a section type, optionally
 reduced based on density.
 }
 \examples{
-\dontrun{
 elements_full <- get_section_elements("drop", 1.0)
 elements_sparse <- get_section_elements("drop", 0.3)
-}
 
 }

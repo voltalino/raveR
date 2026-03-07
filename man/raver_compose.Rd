@@ -46,10 +46,12 @@ The composition process:
 }
 }
 \examples{
-\dontrun{
-model <- raver_analyze("my_script.R")
+\donttest{
+tf <- tempfile(fileext = ".R")
+writeLines("f <- function(x) x + 1", tf)
+model <- raver_analyze(tf)
 track <- raver_compose(model, bpm = 122)
-raver_export_wav(track, "output.wav")
+unlink(tf)
 }
 
 }

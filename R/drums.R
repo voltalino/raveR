@@ -44,7 +44,7 @@ get_drum_kit_cached <- function() {
 #'   throwing an error to allow graceful degradation.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' kick <- raver_drum_hit("kick", velocity = 0.8)
 #' snare <- raver_drum_hit("snare", velocity = 0.9)
 #' soft_hihat <- raver_drum_hit("hihat_closed", velocity = 0.4)
@@ -143,7 +143,7 @@ calculate_swing_offset <- function(step, swing_amount, samples_per_16th) {
 #' of a 16th note. Common house swing values are 0.05 to 0.15.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # 4-on-the-floor kick pattern
 #' four_on_floor <- c(TRUE, rep(FALSE, 3), TRUE, rep(FALSE, 3),
 #'                    TRUE, rep(FALSE, 3), TRUE, rep(FALSE, 3))

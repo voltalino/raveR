@@ -30,7 +30,7 @@ ADSR envelope (attack=0.1, decay=0.2, sustain=0.7, release=0.3)
 creates the characteristic pad "swell" effect.
 }
 \examples{
-\dontrun{
+\donttest{
 # Single pad note
 note <- raver_pad_note(60, 2.0)  # C4, 2 seconds
 

@@ -18,7 +18,7 @@ Blocks execution until the audio playback completes. If no instance
 is provided, waits for the most recently started playback.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # Play and wait for completion
 tone <- raver_sine(440, 2)
 play_audio(tone)

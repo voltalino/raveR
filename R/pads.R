@@ -33,7 +33,7 @@ NULL
 #' quieter, creating a natural decay tail.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' pad <- raver_pad_chord(48, "min9", 2.0)
 #' padrev <- apply_pad_reverb(pad)
 #' }
@@ -107,7 +107,7 @@ apply_pad_reverb <- function(wave, decay = 0.35, delays_ms = c(50, 100, 150, 200
 #' creates the characteristic pad "swell" effect.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Single pad note
 #' note <- raver_pad_note(60, 2.0)  # C4, 2 seconds
 #'
@@ -277,7 +277,7 @@ apply_adsr_pad <- function(samples, sample_rate, attack, decay, sustain_level, r
 #' reverb is added for the characteristic deep house pad sound.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Cmin9 pad, 4 seconds
 #' chord <- raver_pad_chord(48, "min9", 4.0)
 #'
@@ -357,7 +357,7 @@ raver_pad_chord <- function(root_midi, chord_type = "min9", duration_sec,
 #' @return A Wave object containing the full progression
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Am7 -> Fmaj7 progression, 1 bar each
 #' prog <- list(
 #'   list(root = 57, type = "min7"),

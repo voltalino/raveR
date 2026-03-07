@@ -87,11 +87,11 @@ pad_to_length <- function(wave, target_samples) {
 #' 4. Sum all tracks together
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' tracks <- list(
-#'   kick = kick_wave,
-#'   bass = bass_wave,
-#'   pad = pad_wave
+#'   kick = raver_sine(55, 0.5),
+#'   bass = raver_sine(110, 0.5),
+#'   pad = raver_sine(440, 0.5)
 #' )
 #' mixed <- mix_tracks(tracks)
 #' normalized <- normalize_mix(mixed)
@@ -172,7 +172,9 @@ mix_tracks <- function(tracks, levels = DEFAULT_MIX_LEVELS) {
 #' - If current peak is 1.5, scale by 0.708/1.5 = 0.472
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' tone <- raver_sine(440, 0.5)
+#' tracks <- list(a = tone)
 #' mixed <- mix_tracks(tracks)
 #' normalized <- normalize_mix(mixed, headroom_db = -3)
 #' }
@@ -225,9 +227,9 @@ normalize_mix <- function(wave, headroom_db = -3.0) {
 #' which sounds more natural and avoids digital distortion artifacts.
 #'
 #' @examples
-#' \dontrun{
-#' normalized <- normalize_mix(mixed)
-#' limited <- apply_master_limiter(normalized, threshold = 0.95)
+#' \donttest{
+#' tone <- raver_sine(440, 0.5)
+#' limited <- apply_master_limiter(tone, threshold = 0.95)
 #' }
 #'
 #' @export
@@ -274,9 +276,9 @@ apply_master_limiter <- function(wave, threshold = 0.95) {
 #' dramatic tonal changes.
 #'
 #' @examples
-#' \dontrun{
-#' limited <- apply_master_limiter(normalized)
-#' eq_wave <- apply_master_eq(limited, bass_boost_db = 2)
+#' \donttest{
+#' tone <- raver_sine(440, 0.5)
+#' eq_wave <- apply_master_eq(tone, bass_boost_db = 2)
 #' }
 #'
 #' @export

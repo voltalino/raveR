@@ -27,9 +27,9 @@ This provides smooth compression of peaks rather than hard clipping,
 which sounds more natural and avoids digital distortion artifacts.
 }
 \examples{
-\dontrun{
-normalized <- normalize_mix(mixed)
-limited <- apply_master_limiter(normalized, threshold = 0.95)
+\donttest{
+tone <- raver_sine(440, 0.5)
+limited <- apply_master_limiter(tone, threshold = 0.95)
 }
 
 }

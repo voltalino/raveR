@@ -30,11 +30,11 @@ The mixing process:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 tracks <- list(
-  kick = kick_wave,
-  bass = bass_wave,
-  pad = pad_wave
+  kick = raver_sine(55, 0.5),
+  bass = raver_sine(110, 0.5),
+  pad = raver_sine(440, 0.5)
 )
 mixed <- mix_tracks(tracks)
 normalized <- normalize_mix(mixed)
