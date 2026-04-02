@@ -30,14 +30,17 @@ Higher bitrates (256000, 320000) provide better quality at larger file size.
 Lower bitrates (128000, 96000) provide smaller files with reduced quality.
 }
 \examples{
-\dontrun{
+\donttest{
 # Check FFmpeg first
 if (check_ffmpeg()) {
   tone <- raver_sine(440, 2)
-  path <- export_mp3(tone, "my_tone.mp3")
+  out <- tempfile(fileext = ".mp3")
+  path <- export_mp3(tone, out)
 
   # With custom bitrate (320 kbps)
-  path <- export_mp3(tone, "high_quality.mp3", bitrate = 320000L)
+  out_hq <- tempfile(fileext = ".mp3")
+  path <- export_mp3(tone, out_hq, bitrate = 320000L)
+  unlink(c(out, out_hq))
 }
 }
 }
