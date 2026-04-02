@@ -3,6 +3,7 @@
 #'   with standardized parameters. All functions use 32-bit float internally
 #'   for processing headroom, and return tuneR Wave objects.
 #' @name waveform-synthesis
+#' @noRd
 NULL
 
 #' Generate a Sine Wave
@@ -15,11 +16,11 @@ NULL
 #' @param sample_rate Sample rate in Hz (default: 44100)
 #'
 #' @return A tuneR Wave object (mono, 32-bit float)
-#' @export
 #'
 #' @examples
 #' # Generate 1 second of 440 Hz (A4)
 #' wave <- raver_sine(440, 1)
+#' @noRd
 raver_sine <- function(freq, duration_sec, sample_rate = SAMPLE_RATE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::sine(
@@ -42,7 +43,6 @@ raver_sine <- function(freq, duration_sec, sample_rate = SAMPLE_RATE) {
 #' @param reverse If TRUE, generates an inverted (reverse) sawtooth
 #'
 #' @return A tuneR Wave object (mono, 32-bit float)
-#' @export
 #'
 #' @examples
 #' # Generate 1 second of 110 Hz sawtooth (bass range)
@@ -50,6 +50,7 @@ raver_sine <- function(freq, duration_sec, sample_rate = SAMPLE_RATE) {
 #'
 #' # Inverted sawtooth
 #' wave_inv <- raver_sawtooth(110, 1, reverse = TRUE)
+#' @noRd
 raver_sawtooth <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, reverse = FALSE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::sawtooth(
@@ -73,7 +74,6 @@ raver_sawtooth <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, revers
 #' @param duty Duty cycle (0.0 to 1.0). Default 0.5 = 50% (symmetric square)
 #'
 #' @return A tuneR Wave object (mono, 32-bit float)
-#' @export
 #'
 #' @examples
 #' # Generate 1 second of 220 Hz square wave
@@ -81,6 +81,7 @@ raver_sawtooth <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, revers
 #'
 #' # Narrow pulse (25% duty cycle)
 #' wave_pulse <- raver_square(220, 1, duty = 0.25)
+#' @noRd
 raver_square <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, duty = 0.5) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::square(
@@ -102,12 +103,12 @@ raver_square <- function(freq, duration_sec, sample_rate = SAMPLE_RATE, duty = 0
 #' @param sample_rate Sample rate in Hz (default: 44100)
 #'
 #' @return A tuneR Wave object (mono, 32-bit float)
-#' @export
 #'
 #' @examples
 #' # Create a custom waveform from raw samples
 #' samples <- sin(2 * pi * 440 * (0:44099) / 44100)
 #' wave <- create_wave(samples)
+#' @noRd
 create_wave <- function(samples, sample_rate = SAMPLE_RATE) {
   tuneR::Wave(
     left = as.numeric(samples),

@@ -3,6 +3,7 @@
 #'   Uses the audio package for native playback on Mac (AudioUnits),
 #'   Windows (Windows Multimedia), and Linux (PortAudio).
 #' @name audio-playback
+#' @noRd
 NULL
 
 # Package environment to store current playback state
@@ -18,7 +19,6 @@ NULL
 #' @param wave A tuneR Wave object to play
 #'
 #' @return An audioInstance object for playback control (invisibly)
-#' @export
 #'
 #' @details
 #' Platform notes:
@@ -47,6 +47,7 @@ NULL
 #' Sys.sleep(1)
 #' stop_audio()
 #' }
+#' @noRd
 play_audio <- function(wave) {
   # Validate input
 
@@ -147,7 +148,6 @@ if (!inherits(wave, "Wave")) {
 #' is playing - the function will simply do nothing.
 #'
 #' @return NULL (invisibly)
-#' @export
 #'
 #' @examples
 #' if (interactive()) {
@@ -157,6 +157,7 @@ if (!inherits(wave, "Wave")) {
 #' Sys.sleep(2)
 #' stop_audio()  # Stops after ~2 seconds
 #' }
+#' @noRd
 stop_audio <- function() {
   instance <- .playback_env$current_instance
 
@@ -181,7 +182,6 @@ stop_audio <- function() {
 #'   uses the most recently started playback.
 #'
 #' @return NULL (invisibly)
-#' @export
 #'
 #' @examples
 #' if (interactive()) {
@@ -194,6 +194,7 @@ stop_audio <- function() {
 #' instance <- play_audio(tone)
 #' wait_audio(instance)
 #' }
+#' @noRd
 wait_audio <- function(instance = NULL) {
   if (is.null(instance)) {
     instance <- .playback_env$current_instance
@@ -218,7 +219,6 @@ wait_audio <- function(instance = NULL) {
 #'   uses the most recently started playback.
 #'
 #' @return NULL (invisibly)
-#' @export
 #'
 #' @examples
 #' if (interactive()) {
@@ -229,6 +229,7 @@ wait_audio <- function(instance = NULL) {
 #' Sys.sleep(1)
 #' resume_audio()  # Resumes playback
 #' }
+#' @noRd
 pause_audio <- function(instance = NULL) {
   if (is.null(instance)) {
     instance <- .playback_env$current_instance
@@ -253,7 +254,6 @@ pause_audio <- function(instance = NULL) {
 #'   uses the most recently started playback.
 #'
 #' @return NULL (invisibly)
-#' @export
 #'
 #' @examples
 #' if (interactive()) {
@@ -264,6 +264,7 @@ pause_audio <- function(instance = NULL) {
 #' Sys.sleep(1)
 #' resume_audio()  # Continues from where it paused
 #' }
+#' @noRd
 resume_audio <- function(instance = NULL) {
   if (is.null(instance)) {
     instance <- .playback_env$current_instance

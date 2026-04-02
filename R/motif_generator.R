@@ -3,6 +3,7 @@
 #'   MD5 hashing. The same function name always produces the same motif,
 #'   ensuring consistent musical identity across sessions.
 #' @name motif-generator
+#' @noRd
 NULL
 
 # =============================================================================
@@ -47,7 +48,7 @@ NULL
 #' motif$notes    # MIDI notes for active steps
 #' }
 #'
-#' @export
+#' @noRd
 generate_motif <- function(name, scale_notes, seed = NULL, length = 8) {
   # Combine name with seed if provided
 
@@ -130,7 +131,7 @@ hash_input <- if (!is.null(seed)) paste0(name, seed) else name
 #' pattern <- motif_to_pattern(motif, "bass")
 #' }
 #'
-#' @export
+#' @noRd
 motif_to_pattern <- function(motif, instrument = "bass", duration_16ths = 2) {
   # Build step velocities from motif
   steps <- numeric(16)
@@ -183,7 +184,7 @@ motif_to_pattern <- function(motif, instrument = "bass", duration_16ths = 2) {
 #' evolved <- evolve_motif(motif, 0.1)
 #' }
 #'
-#' @export
+#' @noRd
 evolve_motif <- function(motif, variation = 0.1) {
   # Generate deterministic variation using hash
   evolve_input <- paste0(motif$name, "evolve", motif$seed)
@@ -271,7 +272,7 @@ evolve_motif <- function(motif, variation = 0.1) {
 #' key <- hash_to_key("my_data_pipeline.R")
 #' # Always returns the same key for the same name
 #'
-#' @export
+#' @noRd
 hash_to_key <- function(name) {
   hash_str <- digest::digest(name, algo = "md5")
   hash_int <- strtoi(substr(hash_str, 1, 7), base = 16L)
@@ -302,7 +303,7 @@ hash_to_key <- function(name) {
 #' # Returns list of chord specs like:
 #' # list(list(root = 1, type = "min7"), list(root = 4, type = "maj7"), ...)
 #'
-#' @export
+#' @noRd
 hash_to_progression <- function(name, length = 4) {
   hash_str <- digest::digest(name, algo = "md5")
   bytes <- strtoi(substring(hash_str, seq(1, 31, 2), seq(2, 32, 2)), base = 16L)

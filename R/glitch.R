@@ -3,6 +3,7 @@
 #'   These effects create intentional digital artifacts like stutters, bitcrushing,
 #'   and dropouts that can be used musically or to indicate error conditions.
 #' @name glitch
+#' @noRd
 NULL
 
 #' Generate Glitch Effect
@@ -16,7 +17,6 @@ NULL
 #' @param seed Optional random seed for reproducibility. Default NULL.
 #'
 #' @return A modified Wave object with glitch effects applied
-#' @export
 #'
 #' @details
 #' The function randomly selects and combines effects based on intensity:
@@ -44,6 +44,7 @@ NULL
 #' glitch2 <- generate_glitch_effect(tone, intensity = 0.5, seed = 42)
 #' # glitch1 and glitch2 will be identical
 #' }
+#' @noRd
 generate_glitch_effect <- function(wave, intensity = 0.5, seed = NULL) {
   # Validate input
   if (!inherits(wave, "Wave")) {
@@ -100,7 +101,6 @@ generate_glitch_effect <- function(wave, intensity = 0.5, seed = NULL) {
 #' @param repeats Integer number of times to repeat each segment (2-4). Default 3.
 #'
 #' @return A modified Wave object with stutter effect applied
-#' @export
 #'
 #' @details
 #' Stutter positions are chosen pseudo-randomly within the audio. Each stutter
@@ -112,6 +112,7 @@ generate_glitch_effect <- function(wave, intensity = 0.5, seed = NULL) {
 #' tone <- raver_sine(440, 2)
 #' stuttered <- apply_stutter(tone, stutter_count = 3, stutter_length_sec = 0.05)
 #' }
+#' @noRd
 apply_stutter <- function(wave, stutter_count = 5L, stutter_length_sec = 0.1,
                           repeats = 3L) {
   # Validate input
@@ -186,7 +187,6 @@ apply_stutter <- function(wave, stutter_count = 5L, stutter_length_sec = 0.1,
 #'   Higher values = more distortion.
 #'
 #' @return A modified Wave object with bitcrushing applied
-#' @export
 #'
 #' @details
 #' Bitcrushing works by quantizing the audio signal to fewer amplitude levels.
@@ -203,6 +203,7 @@ apply_stutter <- function(wave, stutter_count = 5L, stutter_length_sec = 0.1,
 #' # Heavy crush (very lo-fi)
 #' crushed_heavy <- apply_bitcrush(tone, bit_reduction = 8)
 #' }
+#' @noRd
 apply_bitcrush <- function(wave, bit_reduction = 4L) {
   # Validate input
   if (!inherits(wave, "Wave")) {
@@ -280,7 +281,6 @@ apply_bitcrush <- function(wave, bit_reduction = 4L) {
 #'   Default 0.05.
 #'
 #' @return A modified Wave object with dropouts applied
-#' @export
 #'
 #' @details
 #' Dropout positions are chosen pseudo-randomly. Each dropout replaces audio
@@ -291,6 +291,7 @@ apply_bitcrush <- function(wave, bit_reduction = 4L) {
 #' tone <- raver_sine(440, 2)
 #' with_dropouts <- apply_dropout(tone, dropout_count = 5, dropout_length_sec = 0.02)
 #' }
+#' @noRd
 apply_dropout <- function(wave, dropout_count = 3L, dropout_length_sec = 0.05) {
   # Validate input
   if (!inherits(wave, "Wave")) {

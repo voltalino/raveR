@@ -3,6 +3,7 @@
 #'   Handles precise timing, swing application, and combining multiple instrument
 #'   patterns into cohesive bars for deep house production.
 #' @name sequencer
+#' @noRd
 NULL
 
 # =============================================================================
@@ -52,7 +53,7 @@ NULL
 #'     FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE),
 #'   note = 36)  # C2
 #'
-#' @export
+#' @noRd
 create_pattern <- function(instrument, steps, note = NULL, velocity = 1.0, swing = 0.0) {
   # Validate steps length
   if (!(length(steps) %in% c(16, 32))) {
@@ -99,6 +100,7 @@ create_pattern <- function(instrument, steps, note = NULL, velocity = 1.0, swing
 #'
 #' @return Wave object or NULL if instrument not available
 #' @keywords internal
+#' @noRd
 render_step <- function(instrument, note, velocity, duration_sec, chord_type = "min9") {
   result <- switch(instrument,
     kick = raver_drum_hit("kick", velocity, duration_sec),
@@ -127,6 +129,7 @@ render_step <- function(instrument, note, velocity, duration_sec, chord_type = "
 #'
 #' @return Modified Wave object with all waves mixed in
 #' @keywords internal
+#' @noRd
 mix_waves_at_positions <- function(base_wave, waves, positions) {
   if (length(waves) != length(positions)) {
     stop("waves and positions must have the same length")
@@ -194,7 +197,7 @@ mix_waves_at_positions <- function(base_wave, waves, positions) {
 #' kick_wave <- render_pattern(kick_pat, bpm = 120)
 #' }
 #'
-#' @export
+#' @noRd
 render_pattern <- function(pattern, bpm, sample_rate = SAMPLE_RATE) {
   # Calculate bar duration
   bar_duration_sec <- (60 / bpm) * 4
@@ -300,7 +303,7 @@ render_pattern <- function(pattern, bpm, sample_rate = SAMPLE_RATE) {
 #' groove <- combine_patterns(list(kick, snare, hihat), bpm = 120)
 #' }
 #'
-#' @export
+#' @noRd
 combine_patterns <- function(patterns, bpm, sample_rate = SAMPLE_RATE) {
   if (length(patterns) == 0) {
     bar_duration_sec <- (60 / bpm) * 4

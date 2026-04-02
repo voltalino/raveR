@@ -2,6 +2,7 @@
 #' @description Map code features to musical parameters using deterministic
 #'   hash-based assignment. Ensures same script always produces same mapping.
 #' @name mapping
+#' @noRd
 NULL
 
 #' Map Code to Music Parameters
@@ -12,7 +13,6 @@ NULL
 #'
 #' @param code_model A CodeModel object from raver_analyze()
 #' @return List with function_parts, variable_instruments, and arrangement
-#' @export
 #'
 #' @examples
 #' \donttest{
@@ -25,6 +25,7 @@ NULL
 #' mapping$arrangement           # Overall arrangement parameters
 #' unlink(tf)
 #' }
+#' @noRd
 raver_map_to_music <- function(code_model) {
   # Validate input
 
@@ -56,6 +57,7 @@ raver_map_to_music <- function(code_model) {
 #' @param functions Character vector of function names
 #' @return Named list mapping function names to parts (1-4)
 #' @keywords internal
+#' @noRd
 map_functions_to_parts <- function(functions) {
   if (length(functions) == 0) {
     return(structure(list(), names = character(0)))
@@ -81,6 +83,7 @@ map_functions_to_parts <- function(functions) {
 #' @param variables Character vector of variable names
 #' @return Named list mapping variable names to instruments (1-5)
 #' @keywords internal
+#' @noRd
 map_variables_to_instruments <- function(variables) {
   if (length(variables) == 0) {
     return(structure(list(), names = character(0)))
@@ -108,6 +111,7 @@ map_variables_to_instruments <- function(variables) {
 #' @param code_model A CodeModel object
 #' @return List with part_count, instrument_count, density, drum_intensity
 #' @keywords internal
+#' @noRd
 calculate_arrangement <- function(code_model) {
   # Drum intensity: based on nesting depth and control flow
   # More complex code = more intense drums

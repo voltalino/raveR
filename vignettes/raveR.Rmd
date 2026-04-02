@@ -1,0 +1,151 @@
+---
+title: "Getting Started with raveR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with raveR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+raveR transforms R scripts into 'deep house' music. It analyzes your code
+structure --- functions, control flow, complexity --- and maps it to musical
+parameters, producing a deterministic audio track. The same code always
+generates the same music.
+
+## Installation
+
+```{r}
+# Install from CRAN
+install.packages("raveR")
+
+# Or development version from GitHub
+devtools::install_github("voltalino/raveR")
+```
+
+MP3 export requires FFmpeg. WAV export works out of the box.
+
+## Basic usage
+
+The main function is `composeR()`. Point it at any R script and an output
+path:
+
+```{r}
+library(raveR)
+
+composeR("my_analysis.R", "my_analysis.wav")
+```
+
+That's it. raveR parses the script, extracts structural features, maps them
+to musical parameters, and writes a complete 'deep house' track.
+
+### Choosing a tempo
+
+By default, raveR picks a tempo (118--124 BPM) deterministically from the
+file hash. You can override it:
+
+```{r}
+composeR("script.R", "track.wav", bpm = 122)
+```
+
+### Reproducibility
+
+Output is deterministic by default --- the same script always produces the same
+audio. You can also set an explicit seed:
+
+```{r}
+composeR("script.R", "track.wav", seed = 42)
+```
+
+### MP3 export
+
+If FFmpeg is installed, you can export directly to MP3:
+
+```{r}
+composeR("script.R", "track.mp3")
+```
+
+## Live mode
+
+`playR()` starts background playback that responds to code changes in
+real-time. Edit and save your script, and the music transitions smoothly:
+
+```{r}
+playR("my_analysis.R")
+
+# Edit and save my_analysis.R --- music transitions
+# ...keep working...
+
+stopR()
+```
+
+The R console stays interactive during playback. Live mode requires the
+`watcher` package (`install.packages("watcher")`).
+
+## How the mapping works
+
+raveR extracts structural features from your code and maps them to musical
+parameters:
+
+| Code feature            | Musical parameter       |
+|-------------------------|-------------------------|
+| Function count          | Number of musical parts |
+| Nesting depth           | Harmonic complexity     |
+| Control flow statements | Pattern density         |
+| Variable count          | Instrument layers       |
+| Cyclomatic complexity   | Arrangement length      |
+
+A script with many nested loops and complex control flow produces a denser,
+longer track with more harmonic variation. A simple script with one function
+and a few assignments produces a minimal, stripped-back piece.
+
+### Arrangement structure
+
+Every track follows a standard 'deep house' arrangement:
+
+1. **Intro** --- drums fade in, establishing the groove
+2. **Build** --- bass and pads layer in, tension rises
+3. **Drop** --- all elements playing, full energy
+4. **Breakdown** --- stripped back, pads and atmosphere
+5. **Outro** --- elements fade out
+
+The number of bars in each section is determined by your code's complexity.
+
+### Musical elements
+
+- **Kick**: four-on-the-floor pattern (the defining 'deep house' rhythm)
+- **Hi-hats**: 16th notes with swing for groove
+- **Snare/clap**: beats 2 and 4
+- **Bass**: filtered sawtooth, pattern derived from code structure
+- **Pads**: warm chord progressions (min7, maj7, min9 voicings)
+- **Lead**: melodic motifs generated from function names
+
+### Determinism
+
+The mapping uses MD5 hashing throughout. Function names hash to specific
+musical parts, variable names hash to instruments, and the file path
+determines the key and chord progression. This means:
+
+- Same script, same music (always)
+- Renaming a function changes its musical role
+- Adding a variable adds an instrument layer
+- Increasing nesting depth deepens the harmony
+
+## Genres
+
+raveR supports several genre presets that adjust tempo ranges and synthesis
+parameters:
+
+```{r}
+composeR("script.R", "track.wav", genre = "deep_house")  # default
+composeR("script.R", "track.wav", genre = "techno")
+composeR("script.R", "track.wav", genre = "ambient")
+composeR("script.R", "track.wav", genre = "drum_bass")
+```

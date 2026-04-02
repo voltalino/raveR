@@ -3,6 +3,7 @@
 #'   WAV export uses tuneR::writeWave() with 16-bit PCM format for maximum
 #'   compatibility. MP3 export uses av package (requires FFmpeg).
 #' @name audio-export
+#' @noRd
 NULL
 
 #' Export to WAV File
@@ -15,7 +16,6 @@ NULL
 #' @param bit_depth Bit depth for export (default: 16 for CD quality)
 #'
 #' @return The full path to the created file (invisibly)
-#' @export
 #'
 #' @details
 #' The Wave object is normalized using normalize_for_export() before writing.
@@ -34,6 +34,7 @@ NULL
 #' print(path)  # Full path to file
 #' unlink(out)
 #' }
+#' @noRd
 export_wav <- function(wave, filename, bit_depth = 16L) {
   # Validate input
   if (!inherits(wave, "Wave")) {
@@ -97,7 +98,6 @@ export_wav <- function(wave, filename, bit_depth = 16L) {
 #' export will work, FALSE with a warning message if not.
 #'
 #' @return Logical: TRUE if FFmpeg is available for MP3 export, FALSE otherwise
-#' @export
 #'
 #' @details
 #' MP3 export requires FFmpeg to be installed on the system with the lame
@@ -115,6 +115,7 @@ export_wav <- function(wave, filename, bit_depth = 16L) {
 #' \donttest{
 #' check_ffmpeg()
 #' }
+#' @noRd
 check_ffmpeg <- function() {
   # Try to get available muxers from av package
   available <- tryCatch({
@@ -154,7 +155,6 @@ check_ffmpeg <- function() {
 #' @param bitrate Bitrate in bits per second (default: 192000 for 192 kbps)
 #'
 #' @return The full path to the created file (invisibly)
-#' @export
 #'
 #' @details
 #' MP3 export requires FFmpeg with the lame codec. Use check_ffmpeg() to
@@ -178,6 +178,7 @@ check_ffmpeg <- function() {
 #'   unlink(c(out, out_hq))
 #' }
 #' }
+#' @noRd
 export_mp3 <- function(wave, filename, bitrate = 192000L) {
   # Validate input
   if (!inherits(wave, "Wave")) {

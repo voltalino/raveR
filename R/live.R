@@ -3,6 +3,7 @@
 #'   buffers. Provides the core playback loop infrastructure for live mode and
 #'   file watching functionality.
 #' @name live
+#' @noRd
 NULL
 
 #' PlaybackController Class
@@ -34,7 +35,7 @@ NULL
 #' ctrl$stop()
 #' }
 #'
-#' @export
+#' @noRd
 PlaybackController <- R6::R6Class(
   "PlaybackController",
 
@@ -262,6 +263,14 @@ PlaybackController <- R6::R6Class(
     #'
     #' @return NULL (invisibly)
     start_watching = function() {
+      if (!requireNamespace("watcher", quietly = TRUE)) {
+        stop(
+          "Package 'watcher' is required for live file watching (playR).\n",
+          "Install it with: install.packages('watcher')",
+          call. = FALSE
+        )
+      }
+
       # Get directory containing the script
       watch_dir <- dirname(self$script_path)
       target_file <- basename(self$script_path)

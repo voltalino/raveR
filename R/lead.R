@@ -3,6 +3,7 @@
 #'   Creates cutting, melodic lead sounds using detuned oscillators
 #'   with filter modulation for movement.
 #' @name lead
+#' @noRd
 NULL
 
 #' Generate a lead synth note
@@ -27,7 +28,7 @@ NULL
 #' note <- raver_lead_note(60, 0.5)  # C4, half second
 #' }
 #'
-#' @export
+#' @noRd
 raver_lead_note <- function(midi_note, duration_sec, velocity = 0.8, detune_cents = 5) {
   freq <- raver_midi_to_freq(midi_note)
 
@@ -88,7 +89,7 @@ raver_lead_note <- function(midi_note, duration_sec, velocity = 0.8, detune_cent
 #'
 #' @return A Wave object containing the percussive note
 #'
-#' @export
+#' @noRd
 raver_pluck_note <- function(midi_note, duration_sec, velocity = 0.8) {
   freq <- raver_midi_to_freq(midi_note)
 
@@ -150,7 +151,7 @@ raver_pluck_note <- function(midi_note, duration_sec, velocity = 0.8) {
 #'
 #' @return Numeric vector with delay applied
 #'
-#' @export
+#' @noRd
 apply_rhythmic_delay <- function(samples, delay_sec, feedback = 0.4,
                                   mix = 0.5, sample_rate = SAMPLE_RATE) {
   n <- length(samples)
@@ -195,7 +196,7 @@ apply_rhythmic_delay <- function(samples, delay_sec, feedback = 0.4,
 #'
 #' @return A Wave object containing the lead melody
 #'
-#' @export
+#' @noRd
 raver_lead_melody <- function(motif, bpm, bars = 1L, velocity = 0.7) {
   # Calculate timing
 

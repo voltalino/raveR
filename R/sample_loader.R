@@ -3,6 +3,7 @@
 #'   Handles WAV files at any sample rate/bit depth and normalizes them to
 #'   the internal format (44100 Hz, 32-bit float, mono).
 #' @name sample-loading
+#' @noRd
 NULL
 
 # Package environment for sample cache
@@ -17,6 +18,7 @@ NULL
 #' @param target_rate Target sample rate (default: SAMPLE_RATE = 44100)
 #' @return Wave object at target sample rate
 #' @keywords internal
+#' @noRd
 resample_wave <- function(wave, target_rate = SAMPLE_RATE) {
   if (wave@samp.rate == target_rate) {
     return(wave)
@@ -59,6 +61,7 @@ resample_wave <- function(wave, target_rate = SAMPLE_RATE) {
 #' @param wave A Wave object
 #' @return Mono Wave object
 #' @keywords internal
+#' @noRd
 stereo_to_mono <- function(wave) {
   if (!wave@stereo) {
     return(wave)
@@ -80,6 +83,7 @@ stereo_to_mono <- function(wave) {
 #' @param wave A Wave object
 #' @return Normalized Wave object
 #' @keywords internal
+#' @noRd
 normalize_sample_format <- function(wave) {
   # Convert to mono first (before resampling for efficiency)
   wave <- stereo_to_mono(wave)
@@ -118,7 +122,6 @@ normalize_sample_format <- function(wave) {
 #' @param sample_path Path to the WAV file
 #' @param force_reload Logical; if TRUE, bypass cache and reload from disk
 #' @return Wave object, or NULL if file is missing/corrupt
-#' @export
 #' @examples
 #' \donttest{
 #' # Load a WAV sample (returns NULL if not found)
@@ -127,6 +130,7 @@ normalize_sample_format <- function(wave) {
 #'   kick <- raver_load_sample(sample_path)
 #' }
 #' }
+#' @noRd
 raver_load_sample <- function(sample_path, force_reload = FALSE) {
   # Check cache first (unless force_reload)
   cache_key <- sample_path
@@ -188,7 +192,6 @@ raver_load_sample <- function(sample_path, force_reload = FALSE) {
 #'     \item hihat_open: Open hi-hat
 #'   }
 #'   Elements will be NULL if samples are missing.
-#' @export
 #' @examples
 #' \donttest{
 #' kit <- raver_get_drum_kit()
@@ -196,6 +199,7 @@ raver_load_sample <- function(sample_path, force_reload = FALSE) {
 #'   # Use kick sample
 #' }
 #' }
+#' @noRd
 raver_get_drum_kit <- function() {
   # Check cache for entire kit
   cache_key <- ".drum_kit"
@@ -238,9 +242,9 @@ raver_get_drum_kit <- function() {
 #' when memory needs to be freed.
 #'
 #' @return Invisible NULL
-#' @export
 #' @examples
 #' clear_sample_cache()
+#' @noRd
 clear_sample_cache <- function() {
   rm(list = ls(envir = .sample_cache, all.names = TRUE), envir = .sample_cache)
   invisible(NULL)

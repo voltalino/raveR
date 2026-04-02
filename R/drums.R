@@ -3,6 +3,7 @@
 #'   Supports sample triggering with velocity scaling and pattern-based
 #'   sequencing with swing for authentic house groove.
 #' @name drums
+#' @noRd
 NULL
 
 # Package environment for drum kit cache
@@ -14,6 +15,7 @@ NULL
 #'
 #' @return Named list of drum samples
 #' @keywords internal
+#' @noRd
 get_drum_kit_cached <- function() {
   if (exists("kit", envir = .drum_env)) {
     return(get("kit", envir = .drum_env))
@@ -50,7 +52,7 @@ get_drum_kit_cached <- function() {
 #' soft_hihat <- raver_drum_hit("hihat_closed", velocity = 0.4)
 #' }
 #'
-#' @export
+#' @noRd
 raver_drum_hit <- function(drum_type, velocity = 1.0, duration_sec = NULL) {
   # Validate drum type
   valid_types <- c("kick", "snare", "clap", "hihat_closed", "hihat_open")
@@ -111,6 +113,7 @@ raver_drum_hit <- function(drum_type, velocity = 1.0, duration_sec = NULL) {
 #'
 #' @return Integer sample offset to apply
 #' @keywords internal
+#' @noRd
 calculate_swing_offset <- function(step, swing_amount, samples_per_16th) {
   # Even steps get delayed (1-indexed, so 2, 4, 6... are even)
   if (step %% 2 == 0) {
@@ -156,7 +159,7 @@ calculate_swing_offset <- function(step, swing_amount, samples_per_16th) {
 #'                                  drum_type = "hihat_closed", swing = 0.1)
 #' }
 #'
-#' @export
+#' @noRd
 raver_drum_pattern <- function(pattern, bpm, drum_type = "kick", swing = 0.0) {
   # Validate pattern
   if (length(pattern) != 16) {

@@ -3,6 +3,7 @@
 #'   tracks from code analysis. Integrates music theory, instruments, sequencer,
 #'   motifs, and arrangement components.
 #' @name composition-engine
+#' @noRd
 NULL
 
 # =============================================================================
@@ -18,6 +19,7 @@ NULL
 #'
 #' @return Integer BPM between 118 and 124
 #' @keywords internal
+#' @noRd
 select_bpm <- function(code_model) {
   # Hash file path for determinism
 
@@ -38,6 +40,7 @@ select_bpm <- function(code_model) {
 #'
 #' @return TRUE if valid, stops with error if invalid
 #' @keywords internal
+#' @noRd
 validate_bpm <- function(bpm, genre = "deep_house") {
   if (!is.numeric(bpm) || length(bpm) != 1) {
     stop("BPM must be a single numeric value", call. = FALSE)
@@ -66,6 +69,7 @@ validate_bpm <- function(bpm, genre = "deep_house") {
 #' @param genre Character: "deep_house", "techno", "ambient", "drum_bass"
 #' @return List with genre-specific parameters
 #' @keywords internal
+#' @noRd
 get_genre_config <- function(genre) {
   configs <- list(
     deep_house = list(
@@ -114,6 +118,7 @@ get_genre_config <- function(genre) {
 #'
 #' @return Integer BPM within genre range
 #' @keywords internal
+#' @noRd
 select_bpm_for_genre <- function(code_model, genre = "deep_house") {
   config <- get_genre_config(genre)
   bpm_range <- config$bpm_range
@@ -137,6 +142,7 @@ select_bpm_for_genre <- function(code_model, genre = "deep_house") {
 #'
 #' @return Wave object with swing applied
 #' @keywords internal
+#' @noRd
 apply_genre_swing <- function(wave, genre_config) {
   # For now, swing is applied at the sequencer level
   # This is a placeholder for future stereo/micro-timing swing effects
@@ -183,7 +189,7 @@ apply_genre_swing <- function(wave, genre_config) {
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAMPLE_RATE, genre = "deep_house") {
   # Validate input
   if (!inherits(code_model, "CodeModel")) {
@@ -268,7 +274,7 @@ raver_compose <- function(code_model, bpm = NULL, seed = NULL, sample_rate = SAM
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 raver_compose_section <- function(code_model, section_type, bpm = 120,
                                    bars = NULL, sample_rate = SAMPLE_RATE) {
   # Validate input
@@ -333,6 +339,7 @@ raver_compose_section <- function(code_model, section_type, bpm = 120,
 #'
 #' @return List of pattern objects for drums
 #' @keywords internal
+#' @noRd
 generate_drum_patterns <- function(section, bpm, density) {
   elements <- section$elements
   patterns <- list()
@@ -401,6 +408,7 @@ generate_drum_patterns <- function(section, bpm, density) {
 #'
 #' @return A pattern object for bass
 #' @keywords internal
+#' @noRd
 generate_bass_pattern <- function(motif, section, bpm) {
   if (is.null(motif)) {
     # Default bass pattern if no motif
@@ -425,6 +433,7 @@ generate_bass_pattern <- function(motif, section, bpm) {
 #'
 #' @return A Wave object with pad progression
 #' @keywords internal
+#' @noRd
 generate_pad_progression <- function(arrangement, section, bars, sample_rate = SAMPLE_RATE) {
   bpm <- arrangement$bpm
   key <- arrangement$key
@@ -492,6 +501,7 @@ generate_pad_progression <- function(arrangement, section, bars, sample_rate = S
 #'
 #' @return A Wave object with bass line
 #' @keywords internal
+#' @noRd
 generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_RATE) {
   bpm <- arrangement$bpm
   key <- arrangement$key
@@ -589,6 +599,7 @@ generate_bass_line <- function(arrangement, section, bars, sample_rate = SAMPLE_
 #'
 #' @return A Wave object with lead melody, or NULL if no motifs
 #' @keywords internal
+#' @noRd
 generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPLE_RATE) {
   bpm <- arrangement$bpm
   motifs <- arrangement$motifs
@@ -701,6 +712,7 @@ generate_lead_melody <- function(arrangement, section, bars, sample_rate = SAMPL
 #'
 #' @return Motif with notes mapped to pentatonic scale
 #' @keywords internal
+#' @noRd
 map_to_pentatonic <- function(motif, penta_scale) {
   # For each note in motif, find nearest pentatonic note
   new_notes <- vapply(motif$notes, function(n) {
@@ -732,6 +744,7 @@ map_to_pentatonic <- function(motif, penta_scale) {
 #'
 #' @return Transformed motif with rhythm, notes, velocities, and section params
 #' @keywords internal
+#' @noRd
 transform_motif_for_section <- function(motif, section_type, bar, total_bars) {
   rhythm <- motif$rhythm
   notes <- motif$notes
@@ -872,6 +885,7 @@ transform_motif_for_section <- function(motif, section_type, bar, total_bars) {
 #'   composition from affecting user's random state.
 #'
 #' @keywords internal
+#' @noRd
 reset_rng_state <- function() {
   # Generate a random value to advance the RNG
   # This is less disruptive than fully resetting

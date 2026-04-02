@@ -2,6 +2,7 @@
 #' @description High-level API functions for end-users. The main entry points
 #'   are composeR() for file export and playR()/stopR() for live playback.
 #' @name api
+#' @noRd
 NULL
 
 # Package-level state for active live controller
@@ -114,6 +115,7 @@ composeR <- function(script_path, output_path, bpm = NULL, seed = NULL, genre = 
 #'
 #' @return Character: "wav" or "mp3"
 #' @keywords internal
+#' @noRd
 detect_output_format <- function(output_path) {
   # Extract extension (case-insensitive)
   ext <- tolower(tools::file_ext(output_path))

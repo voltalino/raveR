@@ -4,6 +4,7 @@
 #'   harmonic warmth and atmosphere. Includes reverb for that
 #'   classic deep house spacious sound.
 #' @name pads
+#' @noRd
 NULL
 
 # =============================================================================
@@ -38,7 +39,7 @@ NULL
 #' padrev <- apply_pad_reverb(pad)
 #' }
 #'
-#' @export
+#' @noRd
 apply_pad_reverb <- function(wave, decay = 0.35, delays_ms = c(50, 100, 150, 200, 280, 380),
                               decay_rate = 0.55, wet_dry = 0.4) {
   if (!inherits(wave, "Wave")) {
@@ -115,7 +116,7 @@ apply_pad_reverb <- function(wave, decay = 0.35, delays_ms = c(50, 100, 150, 200
 #' wide_note <- raver_pad_note(60, 2.0, detune_cents = 8)
 #' }
 #'
-#' @export
+#' @noRd
 raver_pad_note <- function(midi_note, duration_sec, velocity = 0.7, detune_cents = 3) {
   # Get base frequency
   base_freq <- raver_midi_to_freq(midi_note)
@@ -186,6 +187,7 @@ raver_pad_note <- function(midi_note, duration_sec, velocity = 0.7, detune_cents
 #'
 #' @return Numeric vector of enveloped samples
 #' @keywords internal
+#' @noRd
 apply_adsr_pad <- function(samples, sample_rate, attack, decay, sustain_level, release) {
   n_samples <- length(samples)
 
@@ -285,7 +287,7 @@ apply_adsr_pad <- function(samples, sample_rate, attack, decay, sustain_level, r
 #' chord_inv <- raver_pad_chord(57, "min7", 4.0, inversion = 1)
 #' }
 #'
-#' @export
+#' @noRd
 raver_pad_chord <- function(root_midi, chord_type = "min9", duration_sec,
                              velocity = 0.85, inversion = 0, reverb = TRUE) {
   # Build chord
@@ -366,7 +368,7 @@ raver_pad_chord <- function(root_midi, chord_type = "min9", duration_sec,
 #' progression <- raver_pad_progression(prog, c(1, 1), bpm = 120)
 #' }
 #'
-#' @export
+#' @noRd
 raver_pad_progression <- function(chords, durations, bpm, velocity = 0.6) {
   if (length(chords) != length(durations)) {
     stop("chords and durations must have the same length")

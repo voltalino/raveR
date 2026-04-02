@@ -2,6 +2,7 @@
 #' @description Filtered sawtooth bass synthesizer for deep house production.
 #'   Creates punchy, filtered bass sounds with ADSR envelope shaping.
 #' @name bass
+#' @noRd
 NULL
 
 #' Apply ADSR envelope to samples
@@ -18,6 +19,7 @@ NULL
 #'
 #' @return Numeric vector of enveloped samples
 #' @keywords internal
+#' @noRd
 apply_adsr <- function(samples, sample_rate, attack, decay, sustain_level, release) {
   n_samples <- length(samples)
 
@@ -96,6 +98,7 @@ apply_adsr <- function(samples, sample_rate, attack, decay, sustain_level, relea
 #'
 #' @return Filtered Wave object
 #' @keywords internal
+#' @noRd
 apply_lowpass_filter <- function(wave, cutoff_hz) {
   samples <- wave@left
   sample_rate <- wave@samp.rate
@@ -150,7 +153,7 @@ apply_lowpass_filter <- function(wave, cutoff_hz) {
 #' deep_bass <- raver_bass_note(33, 1.0, cutoff_hz = 400)
 #' }
 #'
-#' @export
+#' @noRd
 raver_bass_note <- function(midi_note, duration_sec, velocity = 1.0, cutoff_hz = 800) {
   # Convert MIDI to frequency
 
@@ -214,7 +217,7 @@ freq <- raver_midi_to_freq(midi_note)
 #' synco_bass <- raver_bass_line(notes, durations, bpm = 124)
 #' }
 #'
-#' @export
+#' @noRd
 raver_bass_line <- function(notes, durations, bpm, velocity = 0.9, cutoff_hz = 800) {
   if (length(notes) != length(durations)) {
     stop("notes and durations must have the same length")
@@ -272,7 +275,7 @@ raver_bass_line <- function(notes, durations, bpm, velocity = 0.9, cutoff_hz = 8
 #' bass <- raver_bass_octave_pattern(36, rep(pattern, 4), bpm = 120)
 #' }
 #'
-#' @export
+#' @noRd
 raver_bass_octave_pattern <- function(root_midi, pattern, bpm,
                                        velocity = 0.9, cutoff_hz = 800) {
   # Convert pattern to MIDI notes

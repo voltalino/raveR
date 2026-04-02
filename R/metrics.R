@@ -2,6 +2,7 @@
 #' @description Calculate complexity metrics from R parse data for driving
 #'   musical arrangement density and drum build intensity.
 #' @name metrics
+#' @noRd
 NULL
 
 #' Calculate Complexity Metrics
@@ -11,7 +12,6 @@ NULL
 #'
 #' @param pd Parse data frame from getParseData()
 #' @return List with cyclomatic, nesting_depth, control_flow_count
-#' @export
 #' @keywords internal
 #'
 #' @examples
@@ -20,6 +20,7 @@ NULL
 #' metrics <- calculate_metrics(pd)
 #' metrics$cyclomatic       # Cyclomatic complexity
 #' metrics$nesting_depth    # Maximum nesting depth
+#' @noRd
 calculate_metrics <- function(pd) {
   # Default metrics for empty/NULL parse data
   default_metrics <- list(
@@ -65,7 +66,6 @@ calculate_metrics <- function(pd) {
 #'
 #' @param pd Parse data frame from getParseData()
 #' @return Integer maximum nesting depth (0 if no control structures)
-#' @export
 #' @keywords internal
 #'
 #' @examples
@@ -73,6 +73,7 @@ calculate_metrics <- function(pd) {
 #'               keep.source = TRUE)
 #' pd <- getParseData(expr)
 #' calculate_nesting_depth(pd)  # Returns 2
+#' @noRd
 calculate_nesting_depth <- function(pd) {
   if (is.null(pd) || nrow(pd) == 0) {
     return(0L)

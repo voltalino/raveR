@@ -3,6 +3,7 @@
 #'   Maps code complexity to section structure and manages the progression
 #'   from intro through build, drop, breakdown, and outro.
 #' @name arrangement
+#' @noRd
 NULL
 
 # =============================================================================
@@ -22,7 +23,7 @@ NULL
 #' - breakdown: Stripped back, pads and lead prominent (8 bars)
 #' - outro: Elements dropping out (8 bars)
 #'
-#' @export
+#' @noRd
 SECTION_TYPES <- list(
   intro = list(
     bars = 8L,
@@ -103,7 +104,7 @@ SECTION_TYPES <- list(
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 create_arrangement <- function(code_model, bpm = 120, genre_config = NULL, previous_model = NULL) {
   # Validate input
   if (!inherits(code_model, "CodeModel")) {
@@ -162,6 +163,7 @@ create_arrangement <- function(code_model, bpm = 120, genre_config = NULL, previ
 #'
 #' @return Numeric complexity factor from 0.0 to 1.0
 #' @keywords internal
+#' @noRd
 calculate_complexity_factor <- function(code_model) {
   # Combine multiple metrics into complexity score
   # Normalize each to roughly 0-1 range
@@ -189,6 +191,7 @@ calculate_complexity_factor <- function(code_model) {
 #'
 #' @return List of section specs
 #' @keywords internal
+#' @noRd
 build_sections <- function(complexity, code_model, complexity_change = "same", genre_config = NULL) {
   # Extended structure for longer, more dynamic tracks
   # Structure adapts based on complexity change direction
@@ -346,7 +349,7 @@ build_sections <- function(complexity, code_model, complexity_change = "same", g
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
   bpm <- arrangement$bpm
   bars <- section$bars
@@ -473,6 +476,7 @@ render_section <- function(section, arrangement, sample_rate = SAMPLE_RATE) {
 #'
 #' @return A Wave object containing the drum fill
 #' @keywords internal
+#' @noRd
 generate_drum_fill <- function(fill_type = "basic", bpm = 120, sample_rate = SAMPLE_RATE) {
   bar_duration_sec <- (60 / bpm) * 4
   step_duration_sec <- bar_duration_sec / 16
@@ -537,6 +541,7 @@ generate_drum_fill <- function(fill_type = "basic", bpm = 120, sample_rate = SAM
 #'
 #' @return List of patterns
 #' @keywords internal
+#' @noRd
 create_section_patterns <- function(elements, arrangement) {
   patterns <- list()
 
@@ -588,7 +593,7 @@ create_section_patterns <- function(elements, arrangement) {
 #'
 #' @return Numeric vector of filtered samples
 #'
-#' @export
+#' @noRd
 apply_section_filter <- function(samples, start_hz, end_hz, bars, sample_rate = SAMPLE_RATE) {
   n_samples <- length(samples)
   bar_samples <- n_samples / bars
@@ -644,7 +649,7 @@ apply_section_filter <- function(samples, start_hz, end_hz, bars, sample_rate = 
 #' elements_full <- get_section_elements("drop", 1.0)
 #' elements_sparse <- get_section_elements("drop", 0.3)
 #'
-#' @export
+#' @noRd
 get_section_elements <- function(section_type, density = 1.0) {
   if (!(section_type %in% names(SECTION_TYPES))) {
     warning("Unknown section type: ", section_type, ". Using 'drop'.")

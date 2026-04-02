@@ -2,6 +2,7 @@
 #' @description Maps code complexity and nesting depth to audio effects
 #'   (reverb, delay) for spatial and textural variation.
 #' @name effects
+#' @noRd
 NULL
 
 # =============================================================================
@@ -19,6 +20,7 @@ NULL
 #'
 #' @return List with room_size (0-1), decay_time (seconds), wet_level (0-1)
 #' @keywords internal
+#' @noRd
 calculate_reverb_params <- function(nesting_depth, cyclomatic_complexity, genre = "deep_house") {
   # Base values by genre
   genre_bases <- list(
@@ -54,6 +56,7 @@ calculate_reverb_params <- function(nesting_depth, cyclomatic_complexity, genre 
 #'
 #' @return List with delay_time (seconds), feedback (0-1), taps (integer)
 #' @keywords internal
+#' @noRd
 calculate_delay_params <- function(control_flow_count, bpm, genre = "deep_house") {
   beat_duration <- 60 / bpm
 
@@ -94,6 +97,7 @@ calculate_delay_params <- function(control_flow_count, bpm, genre = "deep_house"
 #'
 #' @return Wave object with reverb applied
 #' @keywords internal
+#' @noRd
 apply_reverb <- function(wave, reverb_params) {
   samples <- wave@left
   sr <- wave@samp.rate
@@ -148,6 +152,7 @@ apply_reverb <- function(wave, reverb_params) {
 #'
 #' @return Wave object with delay applied
 #' @keywords internal
+#' @noRd
 apply_delay <- function(wave, delay_params) {
   samples <- wave@left
   sr <- wave@samp.rate
@@ -204,7 +209,7 @@ apply_delay <- function(wave, delay_params) {
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 apply_code_effects <- function(wave, code_model, genre = "deep_house") {
   # Calculate effect parameters from code metrics
   reverb_params <- calculate_reverb_params(

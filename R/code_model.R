@@ -3,6 +3,7 @@
 #'   Stores extracted features (functions, variables, calls) and computed
 #'   musical parameters for audio generation.
 #' @name code_model
+#' @noRd
 NULL
 
 #' CodeModel Class
@@ -24,7 +25,7 @@ NULL
 #' unlink(tf)
 #' }
 #'
-#' @export
+#' @noRd
 CodeModel <- R6::R6Class(
   "CodeModel",
 

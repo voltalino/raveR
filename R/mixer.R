@@ -3,6 +3,7 @@
 #'   normalization, and mastering effects. Provides the final stage of audio
 #'   processing before export.
 #' @name mixer
+#' @noRd
 NULL
 
 # =============================================================================
@@ -14,7 +15,7 @@ NULL
 #' @description Named list of level multipliers (0-1) for each instrument.
 #'   These values are tuned for a balanced deep house mix.
 #'
-#' @export
+#' @noRd
 DEFAULT_MIX_LEVELS <- list(
   kick = 0.9,
   snare = 0.7,
@@ -40,6 +41,7 @@ DEFAULT_MIX_LEVELS <- list(
 #'
 #' @return Wave object with exact target length
 #' @keywords internal
+#' @noRd
 pad_to_length <- function(wave, target_samples) {
   current_length <- length(wave@left)
 
@@ -97,7 +99,7 @@ pad_to_length <- function(wave, target_samples) {
 #' normalized <- normalize_mix(mixed)
 #' }
 #'
-#' @export
+#' @noRd
 mix_tracks <- function(tracks, levels = DEFAULT_MIX_LEVELS) {
   if (length(tracks) == 0) {
     stop("At least one track is required", call. = FALSE)
@@ -179,7 +181,7 @@ mix_tracks <- function(tracks, levels = DEFAULT_MIX_LEVELS) {
 #' normalized <- normalize_mix(mixed, headroom_db = -3)
 #' }
 #'
-#' @export
+#' @noRd
 normalize_mix <- function(wave, headroom_db = -3.0) {
   if (!inherits(wave, "Wave")) {
     stop("wave must be a Wave object", call. = FALSE)
@@ -232,7 +234,7 @@ normalize_mix <- function(wave, headroom_db = -3.0) {
 #' limited <- apply_master_limiter(tone, threshold = 0.95)
 #' }
 #'
-#' @export
+#' @noRd
 apply_master_limiter <- function(wave, threshold = 0.95) {
   if (!inherits(wave, "Wave")) {
     stop("wave must be a Wave object", call. = FALSE)
@@ -281,7 +283,7 @@ apply_master_limiter <- function(wave, threshold = 0.95) {
 #' eq_wave <- apply_master_eq(tone, bass_boost_db = 2)
 #' }
 #'
-#' @export
+#' @noRd
 apply_master_eq <- function(wave, bass_boost_db = 2.0, air_boost_hz = 10000) {
   if (!inherits(wave, "Wave")) {
     stop("wave must be a Wave object", call. = FALSE)

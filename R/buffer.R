@@ -5,6 +5,7 @@
 #'   real-time playback. By pre-rendering complete buffers before playback,
 #'   GC pauses occur between buffer swaps rather than during audio output.
 #' @name buffer-architecture
+#' @noRd
 NULL
 
 #' Create Silence
@@ -16,7 +17,6 @@ NULL
 #' @param sample_rate Sample rate in Hz (default: 44100)
 #'
 #' @return A tuneR Wave object (mono, 32-bit float) containing silence
-#' @export
 #'
 #' @details
 #' Note: tuneR's silence() function has issues with 16-bit PCM directly.
@@ -30,6 +30,7 @@ NULL
 #'
 #' # Create 2 seconds of silence at custom sample rate
 #' gap_48k <- create_silence(2, sample_rate = 48000)
+#' @noRd
 create_silence <- function(duration_sec, sample_rate = SAMPLE_RATE) {
   duration_samples <- as.integer(duration_sec * sample_rate)
   tuneR::silence(
@@ -53,31 +54,8 @@ create_silence <- function(duration_sec, sample_rate = SAMPLE_RATE) {
 #' @param sample_rate Sample rate in Hz (default: 44100)
 #'
 #' @return A complete pre-rendered tuneR Wave object
-#' @export
 #'
-#' @details
-#' The render_buffer function is designed for the pre-rendered buffer
-
-#' architecture that works around R's garbage collection limitations.
-#' R's stop-the-world GC can pause execution for 50-100ms or more,
-#' which would cause clicks and dropouts in real-time audio.
-#'
-#' By rendering complete buffers (typically 4-8 seconds, or 1-4 bars
-#' at 120 BPM) before playback begins, we ensure smooth audio output.
-#' The content_fn is called once to generate the buffer content.
-#'
-#' @examples
-#' \donttest{
-#' # Pre-render a 4-second buffer with a 440 Hz sine wave
-#' buffer <- render_buffer(4, function() raver_sine(440, 4))
-#'
-#' # Pre-render with multiple sounds
-#' buffer <- render_buffer(2, function() {
-#'   sine <- raver_sine(440, 1)
-#'   square <- raver_square(220, 1)
-#'   bind_waves(sine, square)
-#' })
-#' }
+#' @noRd
 render_buffer <- function(duration_sec, content_fn, sample_rate = SAMPLE_RATE) {
   # Evaluate the content function to generate the audio
   content <- content_fn()
@@ -102,7 +80,6 @@ if (!inherits(content, "Wave")) {
 #' @param wave A tuneR Wave object (typically 32-bit float)
 #'
 #' @return A tuneR Wave object in 16-bit PCM format
-#' @export
 #'
 #' @details
 #' Internal processing uses 32-bit float for headroom during mixing.
@@ -119,6 +96,7 @@ if (!inherits(content, "Wave")) {
 #' tuneR::writeWave(export_wave, out)
 #' unlink(out)
 #' }
+#' @noRd
 normalize_for_export <- function(wave) {
   if (!inherits(wave, "Wave")) {
     stop("wave must be a tuneR Wave object")
@@ -135,7 +113,6 @@ normalize_for_export <- function(wave) {
 #' @param ... Wave objects to concatenate
 #'
 #' @return A single tuneR Wave object containing all input waves
-#' @export
 #'
 #' @details
 #' tuneR's bind() function requires all Wave objects to have identical
@@ -151,6 +128,7 @@ normalize_for_export <- function(wave) {
 #' w3 <- raver_sine(660, 0.5)   # 0.5 sec of 660 Hz
 #' melody <- bind_waves(w1, w2, w3)  # 1.5 sec total
 #' }
+#' @noRd
 bind_waves <- function(...) {
   waves <- list(...)
 

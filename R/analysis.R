@@ -4,9 +4,9 @@
 #' @name analysis
 #' @importFrom utils getParseData
 #' @importFrom stats runif
-#' @import R6
-#' @import later
-#' @import watcher
+#' @importFrom R6 R6Class
+#' @importFrom later later
+#' @noRd
 NULL
 
 #' Safe Parse R Script
@@ -17,6 +17,7 @@ NULL
 #' @param file_path Path to R script file
 #' @return Parsed expression, or expression() on error
 #' @keywords internal
+#' @noRd
 safe_parse <- function(file_path) {
   tryCatch(
     parse(file = file_path, keep.source = TRUE),
@@ -39,6 +40,7 @@ safe_parse <- function(file_path) {
 #' @param file_path Path to R script file
 #' @return List with minimal code metrics
 #' @keywords internal
+#' @noRd
 extract_minimal_features <- function(file_path) {
   lines <- readLines(file_path, warn = FALSE)
   text <- paste(lines, collapse = "\n")
@@ -63,7 +65,7 @@ extract_minimal_features <- function(file_path) {
 #' @param pd Parse data frame from getParseData()
 #' @return List with function_definitions, function_calls, variable_assignments
 #' @keywords internal
-#' @export
+#' @noRd
 extract_features <- function(pd) {
   # Default empty result
   result <- list(
@@ -194,7 +196,6 @@ extract_features <- function(pd) {
 #'
 #' @param file_path Path to the R script file to analyze
 #' @return A CodeModel object containing extracted features and metrics
-#' @export
 #'
 #' @examples
 #' \donttest{
@@ -206,6 +207,7 @@ extract_features <- function(pd) {
 #' model$part_count   # Musical parameter (1-4)
 #' unlink(tf)
 #' }
+#' @noRd
 raver_analyze <- function(file_path) {
   # Validate file exists
   if (!file.exists(file_path)) {

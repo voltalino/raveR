@@ -2,6 +2,7 @@
 #' @description Core music theory calculations for deep house generation.
 #'   Includes MIDI/frequency conversion, scale patterns, and chord formulas.
 #' @name music-theory
+#' @noRd
 NULL
 
 # =============================================================================
@@ -12,7 +13,7 @@ NULL
 #'
 #' @description Named list of scale patterns used in deep house production.
 #'   Each pattern is a numeric vector of semitone offsets from the root note.
-#' @export
+#' @noRd
 SCALE_PATTERNS <- list(
   major = c(0L, 2L, 4L, 5L, 7L, 9L, 11L),
   natural_minor = c(0L, 2L, 3L, 5L, 7L, 8L, 10L),
@@ -30,7 +31,7 @@ SCALE_PATTERNS <- list(
 #'
 #' @description Named list of chord formulas used in deep house production.
 #'   Each formula is a numeric vector of semitone offsets from the root note.
-#' @export
+#' @noRd
 CHORD_FORMULAS <- list(
   major = c(0L, 4L, 7L),
   minor = c(0L, 3L, 7L),
@@ -50,7 +51,7 @@ CHORD_FORMULAS <- list(
 #'
 #' @description Named list of root notes commonly used in deep house.
 #'   Values are MIDI note numbers for the third octave (bass range).
-#' @export
+#' @noRd
 HOUSE_KEYS <- list(
   A_minor = 57L,   # A3
   C_major = 48L,   # C3
@@ -90,7 +91,7 @@ HOUSE_KEYS <- list(
 #' raver_midi_to_freq(60)  # C4 = ~261.63 Hz
 #' raver_midi_to_freq(57)  # A3 = 220 Hz
 #'
-#' @export
+#' @noRd
 raver_midi_to_freq <- function(midi_note) {
   440 * 2^((midi_note - 69) / 12)
 }
@@ -118,7 +119,7 @@ raver_midi_to_freq <- function(midi_note) {
 #' raver_note_to_midi("C#", 4)  # 61
 #' raver_note_to_midi("Bb", 4)  # 70
 #'
-#' @export
+#' @noRd
 raver_note_to_midi <- function(note, octave) {
   # Parse note name
   note <- toupper(note)
@@ -163,7 +164,7 @@ raver_note_to_midi <- function(note, octave) {
 #' raver_freq_to_midi(440)  # 69 (A4)
 #' raver_freq_to_midi(261.63)  # 60 (C4)
 #'
-#' @export
+#' @noRd
 raver_freq_to_midi <- function(freq) {
   as.integer(round(69 + 12 * log2(freq / 440)))
 }
@@ -188,7 +189,7 @@ raver_freq_to_midi <- function(freq) {
 #' raver_build_scale(57, "natural_minor", 2)  # A minor, 2 octaves
 #' raver_build_scale(48, "major", 1)          # C major, 1 octave
 #'
-#' @export
+#' @noRd
 raver_build_scale <- function(root_midi, pattern = "natural_minor", octaves = 2) {
   # Get pattern intervals
   if (is.character(pattern)) {
@@ -226,7 +227,7 @@ raver_build_scale <- function(root_midi, pattern = "natural_minor", octaves = 2)
 #' raver_build_chord(48, "min9")   # Cmin9 = C, Eb, G, Bb, D
 #' raver_build_chord(57, "min7")   # Amin7 = A, C, E, G
 #'
-#' @export
+#' @noRd
 raver_build_chord <- function(root_midi, chord_type = "min9") {
   # Get chord intervals
   if (is.character(chord_type)) {
@@ -258,7 +259,7 @@ raver_build_chord <- function(root_midi, chord_type = "min9") {
 #' raver_invert_chord(c(48, 51, 55), 1)  # Move C up: Eb, G, C
 #' raver_invert_chord(c(48, 51, 55), 2)  # Move C, Eb up: G, C, Eb
 #'
-#' @export
+#' @noRd
 raver_invert_chord <- function(chord_notes, inversion = 0) {
   if (inversion == 0) {
     return(as.integer(chord_notes))
@@ -294,7 +295,7 @@ raver_invert_chord <- function(chord_notes, inversion = 0) {
 #' @examples
 #' raver_get_chord_freqs(48, "min9")  # Cmin9 frequencies
 #'
-#' @export
+#' @noRd
 raver_get_chord_freqs <- function(root_midi, chord_type = "min9") {
   chord_notes <- raver_build_chord(root_midi, chord_type)
   raver_midi_to_freq(chord_notes)

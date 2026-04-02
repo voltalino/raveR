@@ -3,6 +3,7 @@
 #'   Implements the Roger Linn swing algorithm where even-numbered steps
 #'   are delayed to create the characteristic house feel.
 #' @name swing
+#' @noRd
 NULL
 
 # =============================================================================
@@ -26,7 +27,7 @@ NULL
 #' - 0.15: Strong triplet feel
 #' - 0.167: MPC-style triplet swing (exactly 1/6)
 #'
-#' @export
+#' @noRd
 GROOVE_PRESETS <- list(
   straight = list(swing = 0.0, description = "No swing, machine-like"),
   light = list(swing = 0.05, description = "Subtle human feel"),
@@ -73,7 +74,7 @@ GROOVE_PRESETS <- list(
 #' # Step 2 with 10% swing
 #' t2 <- calculate_step_timing(2, 120, swing_amount = 0.10)
 #'
-#' @export
+#' @noRd
 calculate_step_timing <- function(step, bpm, swing_amount = 0.0, steps_per_bar = 16) {
   # Calculate bar duration
   bar_duration_sec <- (60 / bpm) * 4
@@ -117,7 +118,7 @@ calculate_step_timing <- function(step, bpm, swing_amount = 0.0, steps_per_bar =
 #' swung <- apply_swing_to_steps(1:4, 0.10)
 #' # swung = c(1.0, 2.1, 3.0, 4.1)
 #'
-#' @export
+#' @noRd
 apply_swing_to_steps <- function(steps, swing_amount) {
   # Apply swing offset to even steps
   adjusted <- sapply(steps, function(s) {
@@ -153,7 +154,7 @@ apply_swing_to_steps <- function(steps, swing_amount) {
 #' # Humanize with deterministic seed
 #' pos <- humanize_timing(44100, amount = 0.02, seed = 42)
 #'
-#' @export
+#' @noRd
 humanize_timing <- function(position_samples, amount = 0.02, seed = NULL) {
   # Reference 16th note duration at 120 BPM
   # At 120 BPM: bar = 2 sec, 16th = 0.125 sec
@@ -197,7 +198,7 @@ max_offset <- as.integer(amount * ref_16th_samples)
 #' @examples
 #' spb <- get_samples_per_beat(120)  # 22050 samples
 #'
-#' @export
+#' @noRd
 get_samples_per_beat <- function(bpm, sample_rate = SAMPLE_RATE) {
   (60 / bpm) * sample_rate
 }
@@ -215,7 +216,7 @@ get_samples_per_beat <- function(bpm, sample_rate = SAMPLE_RATE) {
 #' @examples
 #' spbar <- get_samples_per_bar(120)  # 88200 samples (2 seconds)
 #'
-#' @export
+#' @noRd
 get_samples_per_bar <- function(bpm, sample_rate = SAMPLE_RATE) {
   get_samples_per_beat(bpm, sample_rate) * 4
 }
